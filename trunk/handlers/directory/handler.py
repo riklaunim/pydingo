@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-from os import listdir
-from os.path import isfile, isdir, expanduser, join
+from os.path import isfile, isdir, join
 
 
 from PyQt4 import QtCore, QtGui
@@ -23,7 +22,7 @@ class directoryWidget(QtGui.QWidget):
 		if url and len(url) > 0:
 			pass
 		else:
-			url = expanduser('~')
+			url = QtCore.QDir.homePath()
 		
 		self.ui.url.setText(url)
 		self.mainWindow.update_back_bucket(unicode(url))
@@ -49,26 +48,18 @@ class directoryWidget(QtGui.QWidget):
 		self.ui.items.setGridSize(QtCore.QSize(70, 70))
 		self.ui.items.setWordWrap(True)
 		self.ui.items.setWrapping(True)
-		dirs = listdir(url)
-		drs = []
-		for d in dirs:
-			if isdir(url+u'/'+d.decode('utf-8')) and d[0] != '.':
-				itm = QtGui.QListWidgetItem(d.decode('utf-8'))
-				itm.setIcon(QtGui.QIcon('media/icons/folder.png'))
-				drs.append(itm)
-		drs.sort()
-		for i in drs:
-			self.ui.items.addItem(i)
 		
-		fls = []
-		for d in dirs:
-			if not isdir(url+u'/'+d.decode('utf-8')) and d[0] != '.':
-				itm = QtGui.QListWidgetItem(d.decode('utf-8'))
+		qdir = QtCore.QDir(url)
+		qdir.setFilter(QtCore.QDir.AllEntries | QtCore.QDir.NoDotAndDotDot)
+		qdir.setSorting(QtCore.QDir.DirsFirst)
+		qdirs = qdir.entryList()
+		for d in qdirs:
+			itm = QtGui.QListWidgetItem(d)
+			if isdir(url+u'/'+d):
+				itm.setIcon(QtGui.QIcon('media/icons/folder.png'))
+			else:
 				itm.setIcon(QtGui.QIcon('media/icons/file.png'))
-				fls.append(itm)
-		fls.sort()
-		for i in fls:
-			self.ui.items.addItem(i)
+			self.ui.items.addItem(itm)
 		
 		if newTab:
 			index = parent.addTab(self, tabName)

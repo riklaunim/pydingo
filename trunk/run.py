@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys
-from os.path import isfile, isdir, expanduser
+from os.path import isfile, isdir
 
 from PyQt4 import QtCore, QtGui, QtWebKit
 
@@ -57,26 +57,20 @@ class Dingo(QtGui.QMainWindow):
 		* go on folder up
 		"""
 		self.tab = self.main.currentWidget()
-		uri = unicode(self.tab.ui.url.text()).split('/')
-		if len(uri) > 2:
-			if  len(uri[-1]) > 0:
-				del uri[-1]
-			else:
-				del uri[-1]
-				del uri[-2]
-			uri = '/'.join(uri)
-		else:
-			uri = '/'
-		self.tab.ui.url.setText(uri)
-		self.url_handler()
+		uri = self.tab.ui.url.text()
+		q = QtCore.QDir(uri)
+		if q.cdUp():
+			self.url_handler(url=q.canonicalPath())
+		
+		if q.isRoot():
+			self.tab.ui.up.setEnabled(False)
 	
 	def home_clicked(self):
 		"""
 		Home icon clicked
 		"""
-		uri = expanduser('~')
-		self.tab.ui.url.setText(uri)
-		self.url_handler()
+		url = QtCore.QDir.homePath()
+		self.url_handler(url=url)
 	
 	def back(self):
 		"""
@@ -133,7 +127,13 @@ class Dingo(QtGui.QMainWindow):
 		if not url:
 			url = w.ui.url.text()
 		
+		self.tab = self.main.currentWidget()
+		self.tab.ui.up.setEnabled(True)
+		
 		if isdir(url):
+			q = QtCore.QDir(url)
+			if q.isRoot():
+				self.tab.ui.up.setEnabled(False)
 			from handlers.directory import handler
 			self.tab = handler.directoryWidget(self.main, url=url, mainWindow=self)
 		elif isfile(url):
