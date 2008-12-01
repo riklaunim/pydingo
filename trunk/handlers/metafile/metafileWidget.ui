@@ -127,7 +127,7 @@
         <bool>false</bool>
        </property>
        <property name="toolTip" >
-        <string>Detach</string>
+        <string>Edit</string>
        </property>
        <property name="text" >
         <string/>

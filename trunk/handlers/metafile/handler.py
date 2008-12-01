@@ -13,9 +13,7 @@ class metafileWidget(QtGui.QWidget):
 		super(metafileWidget, self).__init__(parent)
 		self.ui = Ui_MetafileWidget()
 		self.ui.setupUi(self)
-		# kill the margin between widgets
-		#l = self.layout()
-		#l.setMargin(0)
+		
 		# set the lineEdit-URL to be as high as buttons
 		self.ui.url.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.Preferred)
 		# set the "Actions" groupBox to max size
