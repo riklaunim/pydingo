@@ -50,14 +50,7 @@ class fileWidget(QtGui.QWidget):
 		self.ui.editor.setBraceMatching(Qsci.QsciScintilla.SloppyBraceMatch)
 		
 		print mimetype
-		"""
-		ToDo Support for:
-			text/x-cmake
-			text/x-makefile
-			text/x-install
-			text/x-authors
-		"""
-		
+
 		if mimetype:
 			if mimetype == 'application/x-csh' or mimetype == 'application/x-sh' or mimetype == 'text/x-script.zsh' or mimetype == 'application/x-shellscript':
 				lexer = Qsci.QsciLexerBash()
@@ -73,6 +66,12 @@ class fileWidget(QtGui.QWidget):
 				self.ui.editor.setLexer(lexer)
 			elif mimetype == 'text/x-dsrc':
 				lexer = Qsci.QsciLexerD()
+				self.ui.editor.setLexer(lexer)
+			elif mimetype == 'text/x-cmake':
+				lexer = Qsci.QsciLexerCMake()
+				self.ui.editor.setLexer(lexer)
+			elif mimetype == 'text/x-makefile':
+				lexer = Qsci.QsciLexerMakefile()
 				self.ui.editor.setLexer(lexer)
 			elif mimetype == 'text/x-patch':
 				lexer = Qsci.QsciLexerDiff()
@@ -119,7 +118,7 @@ class fileWidget(QtGui.QWidget):
 			- Improve / FIX THIS
 		"""
 		try:
-			text = codecs.open(url,'r','utf-8').read()
+			text = codecs.open(url,'rw','utf-8').read()
 		except:
 			text = open(url).read()
 
