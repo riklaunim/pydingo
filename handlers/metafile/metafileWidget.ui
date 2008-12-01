@@ -194,44 +194,26 @@
      <property name="orientation" >
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="QGroupBox" name="groupBox" >
+     <widget class="QGroupBox" name="actions" >
       <property name="title" >
        <string>Actions</string>
       </property>
      </widget>
-     <widget class="QToolBox" name="toolBox" >
+     <widget class="QToolBox" name="metaInfo" >
       <property name="currentIndex" >
        <number>0</number>
       </property>
-      <widget class="QWidget" name="strona" >
-       <attribute name="label" >
-        <string>File Info</string>
-       </attribute>
-      </widget>
-      <widget class="QWidget" name="page" >
+      <widget class="QWidget" name="fileInfo" >
        <property name="geometry" >
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>237</width>
-         <height>112</height>
+         <width>367</width>
+         <height>178</height>
         </rect>
        </property>
        <attribute name="label" >
-        <string>KDE</string>
-       </attribute>
-      </widget>
-      <widget class="QWidget" name="page_2" >
-       <property name="geometry" >
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>237</width>
-         <height>112</height>
-        </rect>
-       </property>
-       <attribute name="label" >
-        <string>GNOME</string>
+        <string>File Informations</string>
        </attribute>
       </widget>
      </widget>
