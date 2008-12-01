@@ -1,0 +1,244 @@
+<ui version="4.0" >
+ <class>MetafileWidget</class>
+ <widget class="QWidget" name="MetafileWidget" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>745</width>
+    <height>426</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout" >
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout" >
+     <item>
+      <widget class="QPushButton" name="newTab" >
+       <property name="toolTip" >
+        <string>New Tab</string>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+       <property name="icon" >
+        <iconset>
+         <normaloff>../../media/file/new_tab.png</normaloff>../../media/file/new_tab.png</iconset>
+       </property>
+       <property name="iconSize" >
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="back" >
+       <property name="toolTip" >
+        <string>Back</string>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+       <property name="icon" >
+        <iconset>
+         <normaloff>../../media/file/back.png</normaloff>../../media/file/back.png</iconset>
+       </property>
+       <property name="iconSize" >
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="next" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
+       <property name="toolTip" >
+        <string>Next</string>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+       <property name="icon" >
+        <iconset>
+         <normaloff>../../media/file/next.png</normaloff>../../media/file/next.png</iconset>
+       </property>
+       <property name="iconSize" >
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="up" >
+       <property name="toolTip" >
+        <string>Up</string>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+       <property name="icon" >
+        <iconset>
+         <normaloff>../../media/file/up.png</normaloff>../../media/file/up.png</iconset>
+       </property>
+       <property name="iconSize" >
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="home" >
+       <property name="toolTip" >
+        <string>Home</string>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+       <property name="icon" >
+        <iconset>
+         <normaloff>../../media/file/home.png</normaloff>../../media/file/home.png</iconset>
+       </property>
+       <property name="iconSize" >
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="url" />
+     </item>
+     <item>
+      <widget class="QPushButton" name="editThis" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
+       <property name="toolTip" >
+        <string>Detach</string>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+       <property name="icon" >
+        <iconset>
+         <normaloff>../../media/file/edit.png</normaloff>../../media/file/edit.png</iconset>
+       </property>
+       <property name="iconSize" >
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="checkable" >
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="detach" >
+       <property name="toolTip" >
+        <string>Detach</string>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+       <property name="icon" >
+        <iconset>
+         <normaloff>../../media/file/detach.png</normaloff>../../media/file/detach.png</iconset>
+       </property>
+       <property name="iconSize" >
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="close" >
+       <property name="toolTip" >
+        <string>Close</string>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+       <property name="icon" >
+        <iconset>
+         <normaloff>../../media/file/close.png</normaloff>../../media/file/close.png</iconset>
+       </property>
+       <property name="iconSize" >
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QSplitter" name="splitter" >
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <widget class="QGroupBox" name="groupBox" >
+      <property name="title" >
+       <string>Actions</string>
+      </property>
+     </widget>
+     <widget class="QToolBox" name="toolBox" >
+      <property name="currentIndex" >
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="strona" >
+       <attribute name="label" >
+        <string>File Info</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="page" >
+       <property name="geometry" >
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>237</width>
+         <height>112</height>
+        </rect>
+       </property>
+       <attribute name="label" >
+        <string>KDE</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="page_2" >
+       <property name="geometry" >
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>237</width>
+         <height>112</height>
+        </rect>
+       </property>
+       <attribute name="label" >
+        <string>GNOME</string>
+       </attribute>
+      </widget>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
