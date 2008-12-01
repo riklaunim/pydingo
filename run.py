@@ -95,15 +95,15 @@ class Dingo(QtGui.QMainWindow):
 		"""
 		Handle adding new items to url history
 		"""
-		self.tab = self.main.currentWidget()
-		if self.tab:
-			if not self.tab.ui.back.menu():
-				menu = QtGui.QMenu()
-				menu.addAction(newurl)
-			else:
-				menu = self.tab.ui.back.menu()
-				menu.addAction(newurl)
-			return menu
+		#self.tab = self.main.currentWidget()
+		#if self.tab:
+			#if not self.tab.ui.back.menu():
+				#menu = QtGui.QMenu()
+				#menu.addAction(newurl)
+			#else:
+				#menu = self.tab.ui.back.menu()
+				#menu.addAction(newurl)
+			#return menu
 		return False
 		#if self.t:
 			#tab_id = unicode(self.t)
