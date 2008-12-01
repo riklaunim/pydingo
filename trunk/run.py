@@ -143,7 +143,12 @@ class Dingo(QtGui.QMainWindow):
 				from handlers.file import handler
 				self.tab = handler.fileWidget(self.main, url=url, mainWindow=self)
 			else:
-				print 'BINARY: %s' % mimetype
+				from handlers.metafile import handler
+				self.tab = handler.metafileWidget(self.main, url=url, mainWindow=self)
+		elif unicode(url).startswith('http://') or unicode(url).startswith('www'):
+			#from handlers.http import handler
+			#self.tab = handler.handle(self.main, url)
+			print 'web browser currently broken'
 		else:
 			"""
 			ToDo:
@@ -151,17 +156,9 @@ class Dingo(QtGui.QMainWindow):
 				- make a generic url to handler executer here
 				- make a default - no plugin found for this url widget/page
 			"""
-			url_nodes = url.split(':')
-			if len(url_nodes) > 1:
-				if url_nodes[0] == 'http':
-					from handlers.http import handler
-					self.tab = handler.handle(self.main, url)
-			else:
-				if url[0:3] == 'www':
-					from handlers.http import handler
-					self.tab = handler.handle(self.main, url)
-				else:
-					print 'nieznany'
+			routing = unicode(url).split('://')
+			print routing
+			print 'nieznany'
 
 if __name__ == "__main__":
 	app = QtGui.QApplication(sys.argv)
