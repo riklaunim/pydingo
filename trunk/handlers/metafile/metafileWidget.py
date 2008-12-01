@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'metafileWidget.ui'
 #
-# Created: Mon Dec  1 16:14:20 2008
+# Created: Mon Dec  1 22:09:37 2008
 #      by: PyQt4 UI code generator 4.4.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -83,25 +83,18 @@ class Ui_MetafileWidget(object):
         self.splitter = QtGui.QSplitter(MetafileWidget)
         self.splitter.setOrientation(QtCore.Qt.Horizontal)
         self.splitter.setObjectName("splitter")
-        self.groupBox = QtGui.QGroupBox(self.splitter)
-        self.groupBox.setObjectName("groupBox")
-        self.toolBox = QtGui.QToolBox(self.splitter)
-        self.toolBox.setObjectName("toolBox")
-        self.strona = QtGui.QWidget()
-        self.strona.setObjectName("strona")
-        self.toolBox.addItem(self.strona, "")
-        self.page = QtGui.QWidget()
-        self.page.setGeometry(QtCore.QRect(0, 0, 237, 112))
-        self.page.setObjectName("page")
-        self.toolBox.addItem(self.page, "")
-        self.page_2 = QtGui.QWidget()
-        self.page_2.setGeometry(QtCore.QRect(0, 0, 237, 112))
-        self.page_2.setObjectName("page_2")
-        self.toolBox.addItem(self.page_2, "")
+        self.actions = QtGui.QGroupBox(self.splitter)
+        self.actions.setObjectName("actions")
+        self.metaInfo = QtGui.QToolBox(self.splitter)
+        self.metaInfo.setObjectName("metaInfo")
+        self.fileInfo = QtGui.QWidget()
+        self.fileInfo.setGeometry(QtCore.QRect(0, 0, 367, 178))
+        self.fileInfo.setObjectName("fileInfo")
+        self.metaInfo.addItem(self.fileInfo, "")
         self.verticalLayout.addWidget(self.splitter)
 
         self.retranslateUi(MetafileWidget)
-        self.toolBox.setCurrentIndex(0)
+        self.metaInfo.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MetafileWidget)
 
     def retranslateUi(self, MetafileWidget):
@@ -111,11 +104,9 @@ class Ui_MetafileWidget(object):
         self.next.setToolTip(QtGui.QApplication.translate("MetafileWidget", "Next", None, QtGui.QApplication.UnicodeUTF8))
         self.up.setToolTip(QtGui.QApplication.translate("MetafileWidget", "Up", None, QtGui.QApplication.UnicodeUTF8))
         self.home.setToolTip(QtGui.QApplication.translate("MetafileWidget", "Home", None, QtGui.QApplication.UnicodeUTF8))
-        self.editThis.setToolTip(QtGui.QApplication.translate("MetafileWidget", "Detach", None, QtGui.QApplication.UnicodeUTF8))
+        self.editThis.setToolTip(QtGui.QApplication.translate("MetafileWidget", "Edit", None, QtGui.QApplication.UnicodeUTF8))
         self.detach.setToolTip(QtGui.QApplication.translate("MetafileWidget", "Detach", None, QtGui.QApplication.UnicodeUTF8))
         self.close.setToolTip(QtGui.QApplication.translate("MetafileWidget", "Close", None, QtGui.QApplication.UnicodeUTF8))
-        self.groupBox.setTitle(QtGui.QApplication.translate("MetafileWidget", "Actions", None, QtGui.QApplication.UnicodeUTF8))
-        self.toolBox.setItemText(self.toolBox.indexOf(self.strona), QtGui.QApplication.translate("MetafileWidget", "File Info", None, QtGui.QApplication.UnicodeUTF8))
-        self.toolBox.setItemText(self.toolBox.indexOf(self.page), QtGui.QApplication.translate("MetafileWidget", "KDE", None, QtGui.QApplication.UnicodeUTF8))
-        self.toolBox.setItemText(self.toolBox.indexOf(self.page_2), QtGui.QApplication.translate("MetafileWidget", "GNOME", None, QtGui.QApplication.UnicodeUTF8))
+        self.actions.setTitle(QtGui.QApplication.translate("MetafileWidget", "Actions", None, QtGui.QApplication.UnicodeUTF8))
+        self.metaInfo.setItemText(self.metaInfo.indexOf(self.fileInfo), QtGui.QApplication.translate("MetafileWidget", "File Informations", None, QtGui.QApplication.UnicodeUTF8))
 
