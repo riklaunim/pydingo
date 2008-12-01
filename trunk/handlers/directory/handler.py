@@ -24,24 +24,15 @@ class directoryWidget(QtGui.QWidget):
 		else:
 			url = QtCore.QDir.homePath()
 		
+		qdir = QtCore.QDir(url)
 		self.ui.url.setText(url)
 		self.mainWindow.update_back_bucket(unicode(url))
 		
 		# name the tab as current folder name
-		tabName = url.split('/')
-		if len(tabName[-1]) < 2:
-			tabName = tabName[-2]
-		else:
-			tabName = tabName[-1]
-		
-		if len(tabName) < 1:
+		tabName = qdir.dirName()
+		if not tabName:
 			tabName = '/'
-		
 		# set the item list
-		"""
-		ToDo:
-			- use QDir and other Qt classes here!
-		"""
 		self.ui.items.setViewMode(QtGui.QListView.IconMode)
 		self.ui.items.setLayoutMode(QtGui.QListView.SinglePass)
 		self.ui.items.setResizeMode(QtGui.QListView.Adjust)
@@ -49,7 +40,7 @@ class directoryWidget(QtGui.QWidget):
 		self.ui.items.setWordWrap(True)
 		self.ui.items.setWrapping(True)
 		
-		qdir = QtCore.QDir(url)
+		
 		qdir.setFilter(QtCore.QDir.AllEntries | QtCore.QDir.NoDotAndDotDot)
 		qdir.setSorting(QtCore.QDir.DirsFirst)
 		qdirs = qdir.entryList()
