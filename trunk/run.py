@@ -58,12 +58,21 @@ class Dingo(QtGui.QMainWindow):
 		"""
 		self.tab = self.main.currentWidget()
 		uri = self.tab.ui.url.text()
-		q = QtCore.QDir(uri)
-		if q.cdUp():
-			self.url_handler(url=q.canonicalPath())
-		
-		if q.isRoot():
-			self.tab.ui.up.setEnabled(False)
+		if isdir(uri) or isfile(uri):
+			q = QtCore.QDir(uri)
+			if q.cdUp():
+				self.url_handler(url=q.canonicalPath())
+			if q.isRoot():
+				self.tab.ui.up.setEnabled(False)
+		elif unicode(uri).startswith('http://') or unicode(uri).startswith('www'):
+			uri = unicode(uri).replace('http://', '')
+			elems = uri[:-1].split('/')
+			if len(elems) > 1:
+				del elems[-1]
+				uri = '/'.join(elems)
+				uri = 'http://%s' % uri
+				self.url_handler(url=uri)
+			
 	
 	def home_clicked(self):
 		"""
@@ -146,9 +155,8 @@ class Dingo(QtGui.QMainWindow):
 				from handlers.metafile import handler
 				self.tab = handler.metafileWidget(self.main, url=url, mainWindow=self)
 		elif unicode(url).startswith('http://') or unicode(url).startswith('www'):
-			#from handlers.http import handler
-			#self.tab = handler.handle(self.main, url)
-			print 'web browser currently broken'
+			from handlers.http import handler
+			self.tab = handler.webWidget(self.main, url=url, mainWindow=self)
 		else:
 			"""
 			ToDo:
