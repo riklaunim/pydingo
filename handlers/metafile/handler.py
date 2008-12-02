@@ -35,6 +35,9 @@ class metafileWidget(QtGui.QWidget):
 		self.ui.url.setText(url)
 		self.mainWindow.update_back_bucket(unicode(url))
 		
+		"""
+		This will have to look better, use QTreeWidget
+		"""
 		meta = hachoir_meta.get_meta_info(url)
 		if meta and len(meta) > 0:
 			text = '\n<br />'.join(meta)
