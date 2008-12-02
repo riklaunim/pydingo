@@ -47,9 +47,16 @@ class httpWidget(QtGui.QWidget):
 		QtCore.QObject.connect(self.ui.webView,QtCore.SIGNAL("loadProgress (int)"), self.load_progress)
 		QtCore.QObject.connect(self.ui.webView,QtCore.SIGNAL("titleChanged (const QString&)"), self.title_changed)
 		QtCore.QObject.connect(self.ui.reload,QtCore.SIGNAL("clicked()"), self.reload_page)
+		QtCore.QObject.connect(self.ui.stop,QtCore.SIGNAL("clicked()"), self.stop_page)
 		
 		
 		QtCore.QMetaObject.connectSlotsByName(self)
+	
+	def stop_page(self):
+		"""
+		Stop loading the page
+		"""
+		self.ui.webView.stop()
 	
 	def title_changed(self, title):
 		"""

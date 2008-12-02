@@ -66,7 +66,7 @@ class metafileWidget(QtGui.QWidget):
 				ToDo: execute with application
 				"""
 				text += u'<b>Default application</b>: %s<br />' % app_name
-			if meta['other_apps'] and len(meta['other_apps']) > 0:
+			if meta['other_apps'] and len(meta['other_apps']) > 1:
 				text += u'<b>Other applications</b>:<br />'
 				for app in meta['other_apps']:
 					if app[1] != app_name:
