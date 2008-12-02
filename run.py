@@ -155,8 +155,10 @@ class Dingo(QtGui.QMainWindow):
 				from handlers.metafile import handler
 				self.tab = handler.metafileWidget(self.main, url=url, mainWindow=self)
 		elif unicode(url).startswith('http://') or unicode(url).startswith('www'):
+			if unicode(url).startswith('www'):
+				url = 'http://%s' % unicode(url)
 			from handlers.http import handler
-			self.tab = handler.webWidget(self.main, url=url, mainWindow=self)
+			self.tab = handler.httpWidget(self.main, url=url, mainWindow=self)
 		else:
 			"""
 			ToDo:
