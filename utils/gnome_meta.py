@@ -1,7 +1,7 @@
 try:
 	import gnomevfs
 except:
-	print '*Optional dependency missing* No gnome-vfs-python package, GNOME application selection disabled'
+	print '*Optional dependency missing* No gnome-vfs-python package. Install it if you use GNOME or related WM for application suggesting and mime detection'
 
 def get_meta_info(filename):
 	try:

@@ -7,8 +7,8 @@ from PyQt4 import QtCore, QtGui, Qsci
 
 from metafileWidget import Ui_MetafileWidget
 from utils import mime
-import hachoir_meta
-import gnome_meta
+from utils import hachoir_meta
+from utils import gnome_meta
 
 class metafileWidget(QtGui.QWidget):
 	def __init__(self, parent=None, url=False, mainWindow=False, newTab=False):
@@ -43,7 +43,7 @@ class metafileWidget(QtGui.QWidget):
 			text = '\n<br />'.join(meta)
 			no_meta = False
 		else:
-			mimetype = unicode(mime.get_mime(url))
+			mimetype = unicode(mime.get_mime(url)[0])
 			text = '- Mime: %s<br />' % mimetype
 			no_meta = True
 		textWidget = QtGui.QTextBrowser()
