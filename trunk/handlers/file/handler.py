@@ -6,10 +6,9 @@ from os.path import isfile, isdir, expanduser, join
 from PyQt4 import QtCore, QtGui, Qsci
 
 from fileWidget import Ui_FileWidget
-from utils import mime
 
 class fileWidget(QtGui.QWidget):
-	def __init__(self, parent=None, url=False, mainWindow=False, newTab=False):
+	def __init__(self, parent=None, url=False, mainWindow=False, newTab=False, mimes=False):
 		super(fileWidget, self).__init__(parent)
 		self.ui = Ui_FileWidget()
 		self.ui.setupUi(self)
@@ -37,7 +36,10 @@ class fileWidget(QtGui.QWidget):
 		
 		# get mime so code highlighting can be set
 		# set other QSCintilla settings
-		mimetype = unicode(mime.get_mime(url))
+		if mimes:
+			mimetype = unicode(mimes[0])
+		else:
+			raise IOError, 'No mime for %s' % tabName
 		ext = url.split('.')[-1]
 		font = QtGui.QFont()
 		font.setFamily("Verdana")
@@ -49,8 +51,6 @@ class fileWidget(QtGui.QWidget):
 		self.ui.editor.setMarginLineNumbers(0, True)
 		self.ui.editor.setBraceMatching(Qsci.QsciScintilla.SloppyBraceMatch)
 		
-		print mimetype
-
 		if mimetype:
 			if mimetype == 'application/x-csh' or mimetype == 'application/x-sh' or mimetype == 'text/x-script.zsh' or mimetype == 'application/x-shellscript':
 				lexer = Qsci.QsciLexerBash()
@@ -85,7 +85,7 @@ class fileWidget(QtGui.QWidget):
 			elif mimetype == 'text/x-java':
 				lexer = Qsci.QsciLexerJava()
 				self.ui.editor.setLexer(lexer)
-			elif mimetype == 'application/javascript':
+			elif mimetype == 'application/javascript' or mimetype == 'application/x-javascript':
 				lexer = Qsci.QsciLexerJavaScript()
 				self.ui.editor.setLexer(lexer)
 			elif mimetype == 'application/x-perl':

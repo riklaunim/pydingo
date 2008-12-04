@@ -146,11 +146,10 @@ class Dingo(QtGui.QMainWindow):
 			from handlers.directory import handler
 			self.tab = handler.directoryWidget(self.main, url=url, mainWindow=self)
 		elif isfile(url):
-			ext = url.split('.')[-1]
-			mimetype = unicode(mime.get_mime(url))
-			if mimetype and mime.is_plaintext(mimetype):
+			mimes = mime.get_mime(url)
+			if mimes and mime.is_plaintext(mimes):
 				from handlers.file import handler
-				self.tab = handler.fileWidget(self.main, url=url, mainWindow=self)
+				self.tab = handler.fileWidget(self.main, url=url, mainWindow=self, mimes=mimes)
 			else:
 				from handlers.metafile import handler
 				self.tab = handler.metafileWidget(self.main, url=url, mainWindow=self)

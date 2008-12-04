@@ -40,6 +40,8 @@ class directoryWidget(QtGui.QWidget):
 		self.ui.items.setWordWrap(True)
 		self.ui.items.setWrapping(True)
 		
+		#self.ui.items.setMouseTracking(True)
+		
 		
 		qdir.setFilter(QtCore.QDir.AllEntries | QtCore.QDir.NoDotAndDotDot)
 		qdir.setSorting(QtCore.QDir.DirsFirst)
@@ -71,10 +73,17 @@ class directoryWidget(QtGui.QWidget):
 		QtCore.QObject.connect(self.ui.items,QtCore.SIGNAL("itemClicked (QListWidgetItem *)"), self.item_clicked)
 		QtCore.QMetaObject.connectSlotsByName(self)
 	
+	def keyPressEvent(self, event):
+		print 'dupa'
+	
+	def mousePressEvent(self, event):
+		print 'test'
+	
 	def item_clicked(self, item):
 		"""
 		File or folder clicked
 		"""
+		
 		url = join(unicode(self.ui.url.text()),unicode(item.text()))
 		if isdir(url) or isfile(url):
 			#self.ui.url.setText(url)
