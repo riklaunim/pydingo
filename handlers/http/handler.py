@@ -18,7 +18,6 @@ class httpWidget(QtGui.QWidget):
 			url = self.ui.url.text()
 		
 		self.ui.url.setText(url)
-		self.mainWindow.update_back_bucket(unicode(url))
 		
 		# name the tab as current folder name
 		tabName = url
@@ -37,6 +36,7 @@ class httpWidget(QtGui.QWidget):
 		
 		QtCore.QObject.connect(self.ui.newTab,QtCore.SIGNAL("clicked()"), self.mainWindow.new_tab)
 		QtCore.QObject.connect(self.ui.back,QtCore.SIGNAL("clicked()"), self.mainWindow.back)
+		QtCore.QObject.connect(self.ui.next,QtCore.SIGNAL("clicked()"), self.mainWindow.next)
 		QtCore.QObject.connect(self.ui.close,QtCore.SIGNAL("clicked()"), self.mainWindow.close_tab)
 		QtCore.QObject.connect(self.ui.up,QtCore.SIGNAL("clicked()"), self.mainWindow.up_clicked)
 		QtCore.QObject.connect(self.ui.home,QtCore.SIGNAL("clicked()"), self.mainWindow.home_clicked)

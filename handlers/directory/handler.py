@@ -5,11 +5,73 @@ from os.path import isfile, isdir, join
 from PyQt4 import QtCore, QtGui
 from directoryWidget import Ui_DirectoryWidget
 
+class FileManagerWidget(QtGui.QListWidget):
+	def __init__(self, parent=None,):
+		"""
+		QListWidget with handling of mouse events - left and right clicks
+		"""
+		super(FileManagerWidget, self).__init__(parent)
+		
+		# configure the items list
+		self.setViewMode(QtGui.QListView.IconMode)
+		self.setLayoutMode(QtGui.QListView.SinglePass)
+		self.setResizeMode(QtGui.QListView.Adjust)
+		self.setGridSize(QtCore.QSize(70, 70))
+		self.setWordWrap(True)
+		self.setWrapping(True)
+		
+		self.parent = parent
+		
+		QtCore.QMetaObject.connectSlotsByName(self)
+	
+	def mouseReleaseEvent(self, event):
+		"""
+		Handle the event.
+		for left click-release - go to the file/directory
+		"""
+		button = event.button()
+		item = self.itemAt(event.x(), event.y())
+		if item:
+			self.setCurrentItem(item)
+			if button == 1:
+				self.item_clicked()
+	
+	def mousePressEvent(self, event):
+		"""
+		Handle the event.
+		* for left clicks - ability to drag item
+		* for right clicks - show context menu
+		"""
+		button = event.button()
+		item = self.itemAt(event.x(), event.y())
+		if item:
+			self.setCurrentItem(item)
+			if button == 1:
+				print 'LEFT DRAG'
+		if button == 2:
+			print 'Right'
+	
+	def item_clicked(self):
+		"""
+		File or folder clicked
+		"""
+		item = self.currentItem().text()
+		url = join(unicode(self.parent.ui.url.text()),unicode(item))
+		if isdir(url) or isfile(url):
+			#self.ui.url.setText(url)
+			self.parent.mainWindow.url_handler(url=url)
+		else:
+			print u'NOT A FILE OR DIRECTORY %s' % unicode(url)
+
+
 class directoryWidget(QtGui.QWidget):
 	def __init__(self, parent=None, url=False, mainWindow=False, newTab=False):
 		super(directoryWidget, self).__init__(parent)
 		self.ui = Ui_DirectoryWidget()
 		self.ui.setupUi(self)
+		layout = self.layout()
+		self.ui.items = FileManagerWidget(parent=self)
+		layout.addWidget(self.ui.items)
 		self.parent = parent
 		self.mainWindow = mainWindow
 		# set the lineEdit-URL to be as high as buttons
@@ -26,22 +88,11 @@ class directoryWidget(QtGui.QWidget):
 		
 		qdir = QtCore.QDir(url)
 		self.ui.url.setText(url)
-		self.mainWindow.update_back_bucket(unicode(url))
 		
 		# name the tab as current folder name
 		tabName = qdir.dirName()
 		if not tabName:
 			tabName = '/'
-		# set the item list
-		self.ui.items.setViewMode(QtGui.QListView.IconMode)
-		self.ui.items.setLayoutMode(QtGui.QListView.SinglePass)
-		self.ui.items.setResizeMode(QtGui.QListView.Adjust)
-		self.ui.items.setGridSize(QtCore.QSize(70, 70))
-		self.ui.items.setWordWrap(True)
-		self.ui.items.setWrapping(True)
-		
-		#self.ui.items.setMouseTracking(True)
-		
 		
 		qdir.setFilter(QtCore.QDir.AllEntries | QtCore.QDir.NoDotAndDotDot)
 		qdir.setSorting(QtCore.QDir.DirsFirst)
@@ -65,29 +116,11 @@ class directoryWidget(QtGui.QWidget):
 		
 		QtCore.QObject.connect(self.ui.newTab,QtCore.SIGNAL("clicked()"), self.mainWindow.new_tab)
 		QtCore.QObject.connect(self.ui.back,QtCore.SIGNAL("clicked()"), self.mainWindow.back)
+		QtCore.QObject.connect(self.ui.next,QtCore.SIGNAL("clicked()"), self.mainWindow.next)
 		QtCore.QObject.connect(self.ui.close,QtCore.SIGNAL("clicked()"), self.mainWindow.close_tab)
 		QtCore.QObject.connect(self.ui.up,QtCore.SIGNAL("clicked()"), self.mainWindow.up_clicked)
 		QtCore.QObject.connect(self.ui.home,QtCore.SIGNAL("clicked()"), self.mainWindow.home_clicked)
 		QtCore.QObject.connect(self.ui.url,QtCore.SIGNAL("returnPressed()"), self.mainWindow.url_handler)
 		
-		QtCore.QObject.connect(self.ui.items,QtCore.SIGNAL("itemClicked (QListWidgetItem *)"), self.item_clicked)
+		#QtCore.QObject.connect(self.ui.items,QtCore.SIGNAL("itemClicked (QListWidgetItem *)"), self.item_clicked)
 		QtCore.QMetaObject.connectSlotsByName(self)
-	
-	def keyPressEvent(self, event):
-		print 'dupa'
-	
-	def mousePressEvent(self, event):
-		print 'test'
-	
-	def item_clicked(self, item):
-		"""
-		File or folder clicked
-		"""
-		
-		url = join(unicode(self.ui.url.text()),unicode(item.text()))
-		if isdir(url) or isfile(url):
-			#self.ui.url.setText(url)
-			self.mainWindow.url_handler(url=url)
-		else:
-			print u'NOT A FILE OR DIRECTORY %s' % unicode(url)
-	
