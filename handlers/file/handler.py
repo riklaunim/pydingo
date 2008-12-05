@@ -8,7 +8,7 @@ from PyQt4 import QtCore, QtGui, Qsci
 from fileWidget import Ui_FileWidget
 
 class fileWidget(QtGui.QWidget):
-	def __init__(self, parent=None, url=False, mainWindow=False, newTab=False, mimes=False):
+	def __init__(self, parent=None, url=False, mainWindow=False, newTab=False, mime=False):
 		super(fileWidget, self).__init__(parent)
 		self.ui = Ui_FileWidget()
 		self.ui.setupUi(self)
@@ -35,8 +35,8 @@ class fileWidget(QtGui.QWidget):
 		
 		# get mime so code highlighting can be set
 		# set other QSCintilla settings
-		if mimes:
-			mimetype = unicode(mimes[0])
+		if mime:
+			mimetype = unicode(mime)
 		else:
 			raise IOError, 'No mime for %s' % tabName
 		ext = url.split('.')[-1]

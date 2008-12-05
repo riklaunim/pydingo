@@ -42,7 +42,7 @@ class metafileWidget(QtGui.QWidget):
 			text = '\n<br />'.join(meta)
 			no_meta = False
 		else:
-			mimetype = unicode(mime.get_mime(url)[0])
+			mimetype = unicode(mime.get_mime(url))
 			text = '- Mime: %s<br />' % mimetype
 			no_meta = True
 		textWidget = QtGui.QTextBrowser()
