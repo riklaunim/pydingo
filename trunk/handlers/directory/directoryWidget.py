@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'directoryWidget.ui'
 #
-# Created: Wed Nov 26 15:57:27 2008
+# Created: Thu Dec  4 23:24:22 2008
 #      by: PyQt4 UI code generator 4.4.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -13,8 +13,8 @@ class Ui_DirectoryWidget(object):
     def setupUi(self, DirectoryWidget):
         DirectoryWidget.setObjectName("DirectoryWidget")
         DirectoryWidget.resize(700, 426)
-        self.gridLayout = QtGui.QGridLayout(DirectoryWidget)
-        self.gridLayout.setObjectName("gridLayout")
+        self.verticalLayout = QtGui.QVBoxLayout(DirectoryWidget)
+        self.verticalLayout.setObjectName("verticalLayout")
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.newTab = QtGui.QPushButton(DirectoryWidget)
@@ -32,7 +32,6 @@ class Ui_DirectoryWidget(object):
         self.back.setObjectName("back")
         self.horizontalLayout.addWidget(self.back)
         self.next = QtGui.QPushButton(DirectoryWidget)
-        self.next.setEnabled(False)
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap("media/file/next.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.next.setIcon(icon2)
@@ -70,10 +69,7 @@ class Ui_DirectoryWidget(object):
         self.close.setIconSize(QtCore.QSize(32, 32))
         self.close.setObjectName("close")
         self.horizontalLayout.addWidget(self.close)
-        self.gridLayout.addLayout(self.horizontalLayout, 0, 0, 1, 1)
-        self.items = QtGui.QListWidget(DirectoryWidget)
-        self.items.setObjectName("items")
-        self.gridLayout.addWidget(self.items, 1, 0, 1, 1)
+        self.verticalLayout.addLayout(self.horizontalLayout)
 
         self.retranslateUi(DirectoryWidget)
         QtCore.QMetaObject.connectSlotsByName(DirectoryWidget)

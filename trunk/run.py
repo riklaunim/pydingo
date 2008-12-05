@@ -13,6 +13,10 @@ class Dingo(QtGui.QMainWindow):
 		self.ui = Ui_Dingo()
 		self.ui.setupUi(self)
 		
+		# setup for URL history
+		self.history = {}
+		self.future = {}
+		
 		# Future - docking widgets from tabs
 		self.setDockNestingEnabled(True)
 		self.setDockOptions(QtGui.QMainWindow.VerticalTabs)
@@ -28,9 +32,14 @@ class Dingo(QtGui.QMainWindow):
 		
 		# create QTabWidget
 		self.main = QtGui.QTabWidget()
+		
 		# create the starting tab
 		from handlers.directory import handler
 		self.tab = handler.directoryWidget(self.main, mainWindow=self)
+		self.history[self.main.currentIndex()] = [unicode(self.tab.ui.url.text())]
+		self.future[self.main.currentIndex()] = []
+		self.tab.ui.back.setEnabled(False)
+		self.tab.ui.next.setEnabled(False)
 		mainLayout.addWidget(self.main)
 	
 	def close_tab(self):
@@ -38,17 +47,33 @@ class Dingo(QtGui.QMainWindow):
 		Remove the current tab
 		"""
 		index = self.main.currentIndex()
+		# delete URL history
+		try:
+			del self.history[index]
+			del self.future[index]
+		except:
+			pass
 		self.main.removeTab(index)
 		if index == 0:
+			# no more tabs, create a standard new one
 			from handlers.directory import handler
-			handler.directoryWidget(self.main, mainWindow=self)
+			self.tab = handler.directoryWidget(self.main, mainWindow=self)
+			self.history[self.main.currentIndex()] = [unicode(self.tab.ui.url.text())]
+			self.future[self.main.currentIndex()] = []
+			self.tab.ui.back.setEnabled(False)
+			self.tab.ui.next.setEnabled(False)
 	
 	def new_tab(self):
 		"""
 		Create a new Tab
 		"""
 		from handlers.directory import handler
-		handler.directoryWidget(self.main, mainWindow=self, newTab=True)
+		self.tab = handler.directoryWidget(self.main, mainWindow=self, newTab=True)
+		self.history[self.main.currentIndex()] = [unicode(self.tab.ui.url.text())]
+		self.future[self.main.currentIndex()] = []
+		self.tab.ui.back.setEnabled(False)
+		self.tab.ui.next.setEnabled(False)
+		
 	
 	def up_clicked(self):
 		"""
@@ -57,10 +82,14 @@ class Dingo(QtGui.QMainWindow):
 		* go on folder up
 		"""
 		self.tab = self.main.currentWidget()
+		index = self.main.currentIndex()
 		uri = self.tab.ui.url.text()
 		if isdir(uri) or isfile(uri):
 			q = QtCore.QDir(uri)
 			if q.cdUp():
+				# clean "next" history
+				self.future[index] = []
+				self.tab.ui.next.setEnabled(False)
 				self.url_handler(url=q.canonicalPath())
 			if q.isRoot():
 				self.tab.ui.up.setEnabled(False)
@@ -71,8 +100,10 @@ class Dingo(QtGui.QMainWindow):
 				del elems[-1]
 				uri = '/'.join(elems)
 				uri = 'http://%s' % uri
+				# clean "next" history
+				self.future[index] = []
+				self.tab.ui.next.setEnabled(False)
 				self.url_handler(url=uri)
-			
 	
 	def home_clicked(self):
 		"""
@@ -85,44 +116,37 @@ class Dingo(QtGui.QMainWindow):
 		"""
 		Go back one url
 		"""
-		#self.t = self.main.currentIndex()
-		#if self.t:
-			#tab_id = unicode(self.t)
-			#if self.back_bucket.has_key(tab_id) and len(self.back_bucket[tab_id]) > 1:
-				#del self.back_bucket[tab_id][-1]
-				#self.url_handler(url=self.back_bucket[tab_id][-1])
+		index = self.main.currentIndex()
+		self.tab = self.main.currentWidget()
 		
-		#print self.back_bucket
-		#self.tab = self.main.currentWidget()
-		#if self.tab:
-			#print self.tab.ui.back.menu()
-			#print 'a'
-			#self.tab.ui.back.showMenu()
-		return False
+		if len(self.history[index]) > 1:
+			self.future[index].append(self.history[index][-1])
+			del self.history[index][-1]
+			
+			if len(self.future[index]) > 0:
+				self.tab.ui.next.setEnabled(True)
+			
+			self.url_handler(url=self.history[index][-1])
+		else:
+			self.tab.ui.back.setEnabled(False)
 	
-	def update_back_bucket(self, newurl):
+	def next(self):
 		"""
-		Handle adding new items to url history
+		Go to next URL in history
 		"""
-		#self.tab = self.main.currentWidget()
-		#if self.tab:
-			#if not self.tab.ui.back.menu():
-				#menu = QtGui.QMenu()
-				#menu.addAction(newurl)
-			#else:
-				#menu = self.tab.ui.back.menu()
-				#menu.addAction(newurl)
-			#return menu
-		return False
-		#if self.t:
-			#tab_id = unicode(self.t)
-			#if not self.back_bucket.has_key(tab_id):
-				#self.back_bucket[tab_id] = []
-			#self.back_bucket[tab_id].append(newurl)
-			## keep only last 10 urls
-			#if len(self.back_bucket[tab_id]) > 10:
-				#self.back_bucket[tab_id] = self.back_bucket[tab_id][-10:-1]
+		index = self.main.currentIndex()
+		self.tab = self.main.currentWidget()
 		
+		if len(self.future[index]) > 0:
+			self.history[index].append(self.future[index][-1])
+			del self.future[index][-1]
+			
+			if len(self.history[index]) > 1:
+				self.tab.ui.back.setEnabled(True)
+			
+			self.url_handler(url=self.history[index][-1])
+		else:
+			self.tab.ui.next.setEnabled(False)
 	
 	def url_handler(self, url=False):
 		"""
@@ -131,13 +155,12 @@ class Dingo(QtGui.QMainWindow):
 		ToDo:
 			Write a pluggable URL handler for web, file browsing, and special tabs
 		"""
-
-		w = self.main.currentWidget()
-		if not url:
-			url = w.ui.url.text()
-		
 		self.tab = self.main.currentWidget()
+		if not url:
+			url = self.tab.ui.url.text()
+		
 		self.tab.ui.up.setEnabled(True)
+		index = self.main.currentIndex()
 		
 		if isdir(url):
 			q = QtCore.QDir(url)
@@ -168,6 +191,32 @@ class Dingo(QtGui.QMainWindow):
 			routing = unicode(url).split('://')
 			print routing
 			print 'nieznany'
+		
+		# URL history
+		if self.history.has_key(index):
+			if len(self.history[index]) < 2:
+				self.tab.ui.back.setEnabled(False)
+			# add URL if he isn't in the history
+			if self.history[index].count(unicode(url)) < 1:
+				self.tab.ui.back.setEnabled(True)
+				self.history[index].append(unicode(url))
+				
+				# if users clicks on an item that is somewhere in future
+				# delete it as he is on a new browsing path
+				if self.future.has_key(index) and self.future[index].count(unicode(url)) < 1:
+					self.future[index] = []
+					self.tab.ui.next.setEnabled(False)
+		else:
+			self.tab.ui.back.setEnabled(False)
+			self.history[index] = [unicode(url)]
+		
+		# If there are future entries - enable next button
+		if self.future.has_key(index) and len(self.future[index]) > 0:
+			self.tab.ui.next.setEnabled(True)
+		else:
+			self.future[index] = []
+			self.tab.ui.next.setEnabled(False)
+
 
 if __name__ == "__main__":
 	app = QtGui.QApplication(sys.argv)
