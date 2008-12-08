@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 from os.path import isfile, isdir, join
 
-
 from PyQt4 import QtCore, QtGui
 from directoryWidget import Ui_DirectoryWidget
+
+from utils import mime
 
 class FileManagerWidget(QtGui.QListWidget):
 	def __init__(self, parent=None,):
@@ -16,7 +17,8 @@ class FileManagerWidget(QtGui.QListWidget):
 		self.setViewMode(QtGui.QListView.IconMode)
 		self.setLayoutMode(QtGui.QListView.SinglePass)
 		self.setResizeMode(QtGui.QListView.Adjust)
-		self.setGridSize(QtCore.QSize(70, 70))
+		self.setGridSize(QtCore.QSize(75, 75))
+		self.setIconSize(QtCore.QSize(48, 48))
 		self.setWordWrap(True)
 		self.setWrapping(True)
 		
@@ -57,9 +59,14 @@ class FileManagerWidget(QtGui.QListWidget):
 		"""
 		item = self.currentItem().text()
 		url = join(unicode(self.parent.ui.url.text()),unicode(item))
-		if isdir(url) or isfile(url):
-			#self.ui.url.setText(url)
+		if isfile(url):
 			self.parent.mainWindow.url_handler(url=url)
+		elif isdir(url):
+			q = QtCore.QDir(url + u'/.')
+			if q.isReadable():
+				self.parent.mainWindow.url_handler(url=url)
+			else:
+				print 'NOT READABLE'
 		else:
 			print u'NOT A FILE OR DIRECTORY %s' % unicode(url)
 
@@ -88,6 +95,7 @@ class directoryWidget(QtGui.QWidget):
 		
 		qdir = QtCore.QDir(url)
 		self.ui.url.setText(url)
+		self.url = url
 		
 		# name the tab as current folder name
 		tabName = qdir.dirName()
@@ -99,10 +107,48 @@ class directoryWidget(QtGui.QWidget):
 		qdirs = qdir.entryList()
 		for d in qdirs:
 			itm = QtGui.QListWidgetItem(d)
-			if isdir(url+u'/'+d):
-				itm.setIcon(QtGui.QIcon('media/icons/folder.png'))
+			if isdir(unicode(url)+u'/'+unicode(d)):
+				q = QtCore.QDir(unicode(url)+u'/'+unicode(d) + u'/.')
+				if q.isReadable():
+					itm.setIcon(QtGui.QIcon('media/mime_icons/folder_blue.png'))
+				else:
+					itm.setIcon(QtGui.QIcon('media/mime_icons/folder_locked.png'))
 			else:
-				itm.setIcon(QtGui.QIcon('media/icons/file.png'))
+				mimetype = unicode(mime.get_mime(url+u'/'+d))
+				
+				if mime.is_plaintext(mimetype):
+					itm.setIcon(QtGui.QIcon('media/mime_icons/ascii.png'))
+				elif mimetype == 'application/pdf':
+					itm.setIcon(QtGui.QIcon('media/mime_icons/pdf.png'))
+				elif mimetype.startswith('image'):
+					itm.setIcon(QtGui.QIcon('media/mime_icons/image.png'))
+				elif mimetype.startswith('audio'):
+					itm.setIcon(QtGui.QIcon('media/mime_icons/audio-x-generic.png'))
+				elif mimetype.find('application/x-font-ttf') != -1:
+					itm.setIcon(QtGui.QIcon('media/mime_icons/font_truetype.png'))
+				elif mimetype.startswith('video'):
+					itm.setIcon(QtGui.QIcon('media/mime_icons/video.png'))
+				elif mimetype.find('zip') != -1 or mimetype.find('rar') != -1 or mimetype.find('rpm') != -1 or mimetype.find('deb') != -1 or mimetype.find('tar') != -1 or mimetype.find('archive') != -1:
+					itm.setIcon(QtGui.QIcon('media/mime_icons/package.png'))
+				elif mimetype =='application/x-msi' or mimetype == 'application/x-ms-win-installer' or mimetype.find('executable') != -1 or mimetype == 'application/octet-stream':
+					itm.setIcon(QtGui.QIcon('media/mime_icons/exec.png'))
+				elif mimetype == 'application/x-sharedlib':
+					itm.setIcon(QtGui.QIcon('media/mime_icons/binary.png'))
+				elif mimetype.find('html') != -1:
+					itm.setIcon(QtGui.QIcon('media/mime_icons/html.png'))
+				elif mimetype == 'application/x-cd-image':
+					itm.setIcon(QtGui.QIcon('media/mime_icons/iso.png'))
+				elif mimetype == 'application/vnd.oasis.opendocument.presentation' or mimetype.find('powerpoint') != -1:
+					itm.setIcon(QtGui.QIcon('media/mime_icons/openofficeorg-20-oasis-presentation.png'))
+				elif mimetype == 'application/vnd.oasis.opendocument.text' or mimetype.find('msword') != -1:
+					itm.setIcon(QtGui.QIcon('media/mime_icons/openofficeorg-20-oasis-text.png'))
+				elif mimetype.find('bytecode') != -1:
+					itm.setIcon(QtGui.QIcon('media/mime_icons/bytecode.png'))
+				else:
+					print mimetype
+					print unicode(url)+u'/'+unicode(d)
+					print
+					itm.setIcon(QtGui.QIcon('media/mime_icons/unknown.png'))
 			self.ui.items.addItem(itm)
 		
 		if newTab:
@@ -122,5 +168,10 @@ class directoryWidget(QtGui.QWidget):
 		QtCore.QObject.connect(self.ui.home,QtCore.SIGNAL("clicked()"), self.mainWindow.home_clicked)
 		QtCore.QObject.connect(self.ui.url,QtCore.SIGNAL("returnPressed()"), self.mainWindow.url_handler)
 		
+		QtCore.QObject.connect(self.ui.reload,QtCore.SIGNAL("clicked()"), self.reload_items)
+		
 		#QtCore.QObject.connect(self.ui.items,QtCore.SIGNAL("itemClicked (QListWidgetItem *)"), self.item_clicked)
 		QtCore.QMetaObject.connectSlotsByName(self)
+	
+	def reload_items(self):
+		directoryWidget(parent=self.parent, url=self.url, mainWindow=self.mainWindow, newTab=False)

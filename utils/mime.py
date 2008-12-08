@@ -11,11 +11,11 @@ def get_mime(file):
 	Return mime type of a file
 	"""
 	# xdg returns text/plain for everything on Windows :)
-	if unicode(xdg.Mime.get_type('file.sql')) == u'text/x-sql':
+	if xdg and unicode(xdg.Mime.get_type('file.sql')) == u'text/x-sql':
 		file = unicode(file)
 		#try pyxdg linux/unix backed
 		try:
-			mime = xdg.Mime.get_type(file, name_pri=0)
+			mime = xdg.Mime.get_type(file, name_pri=51)
 		except:
 			mime = False
 	else:

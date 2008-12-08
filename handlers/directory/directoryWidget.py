@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'directoryWidget.ui'
 #
-# Created: Thu Dec  4 23:24:22 2008
+# Created: Fri Dec  5 23:52:51 2008
 #      by: PyQt4 UI code generator 4.4.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -45,10 +45,17 @@ class Ui_DirectoryWidget(object):
         self.up.setIconSize(QtCore.QSize(32, 32))
         self.up.setObjectName("up")
         self.horizontalLayout.addWidget(self.up)
-        self.home = QtGui.QPushButton(DirectoryWidget)
+        self.reload = QtGui.QPushButton(DirectoryWidget)
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap("media/file/home.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.home.setIcon(icon4)
+        icon4.addPixmap(QtGui.QPixmap("media/file/reload.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.reload.setIcon(icon4)
+        self.reload.setIconSize(QtCore.QSize(32, 32))
+        self.reload.setObjectName("reload")
+        self.horizontalLayout.addWidget(self.reload)
+        self.home = QtGui.QPushButton(DirectoryWidget)
+        icon5 = QtGui.QIcon()
+        icon5.addPixmap(QtGui.QPixmap("media/file/home.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.home.setIcon(icon5)
         self.home.setIconSize(QtCore.QSize(32, 32))
         self.home.setObjectName("home")
         self.horizontalLayout.addWidget(self.home)
@@ -56,16 +63,16 @@ class Ui_DirectoryWidget(object):
         self.url.setObjectName("url")
         self.horizontalLayout.addWidget(self.url)
         self.detach = QtGui.QPushButton(DirectoryWidget)
-        icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap("media/file/detach.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.detach.setIcon(icon5)
+        icon6 = QtGui.QIcon()
+        icon6.addPixmap(QtGui.QPixmap("media/file/detach.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.detach.setIcon(icon6)
         self.detach.setIconSize(QtCore.QSize(32, 32))
         self.detach.setObjectName("detach")
         self.horizontalLayout.addWidget(self.detach)
         self.close = QtGui.QPushButton(DirectoryWidget)
-        icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap("media/file/close.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.close.setIcon(icon6)
+        icon7 = QtGui.QIcon()
+        icon7.addPixmap(QtGui.QPixmap("media/file/close.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.close.setIcon(icon7)
         self.close.setIconSize(QtCore.QSize(32, 32))
         self.close.setObjectName("close")
         self.horizontalLayout.addWidget(self.close)
@@ -80,6 +87,7 @@ class Ui_DirectoryWidget(object):
         self.back.setToolTip(QtGui.QApplication.translate("DirectoryWidget", "Back", None, QtGui.QApplication.UnicodeUTF8))
         self.next.setToolTip(QtGui.QApplication.translate("DirectoryWidget", "Next", None, QtGui.QApplication.UnicodeUTF8))
         self.up.setToolTip(QtGui.QApplication.translate("DirectoryWidget", "Up", None, QtGui.QApplication.UnicodeUTF8))
+        self.reload.setToolTip(QtGui.QApplication.translate("DirectoryWidget", "Refresh", None, QtGui.QApplication.UnicodeUTF8))
         self.home.setToolTip(QtGui.QApplication.translate("DirectoryWidget", "Home", None, QtGui.QApplication.UnicodeUTF8))
         self.detach.setToolTip(QtGui.QApplication.translate("DirectoryWidget", "Detach", None, QtGui.QApplication.UnicodeUTF8))
         self.close.setToolTip(QtGui.QApplication.translate("DirectoryWidget", "Close", None, QtGui.QApplication.UnicodeUTF8))
