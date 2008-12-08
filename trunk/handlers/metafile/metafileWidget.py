@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'metafileWidget.ui'
 #
-# Created: Mon Dec  1 22:09:37 2008
+# Created: Sun Dec  7 19:04:17 2008
 #      by: PyQt4 UI code generator 4.4.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -85,16 +85,9 @@ class Ui_MetafileWidget(object):
         self.splitter.setObjectName("splitter")
         self.actions = QtGui.QGroupBox(self.splitter)
         self.actions.setObjectName("actions")
-        self.metaInfo = QtGui.QToolBox(self.splitter)
-        self.metaInfo.setObjectName("metaInfo")
-        self.fileInfo = QtGui.QWidget()
-        self.fileInfo.setGeometry(QtCore.QRect(0, 0, 367, 178))
-        self.fileInfo.setObjectName("fileInfo")
-        self.metaInfo.addItem(self.fileInfo, "")
         self.verticalLayout.addWidget(self.splitter)
 
         self.retranslateUi(MetafileWidget)
-        self.metaInfo.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MetafileWidget)
 
     def retranslateUi(self, MetafileWidget):
@@ -108,5 +101,4 @@ class Ui_MetafileWidget(object):
         self.detach.setToolTip(QtGui.QApplication.translate("MetafileWidget", "Detach", None, QtGui.QApplication.UnicodeUTF8))
         self.close.setToolTip(QtGui.QApplication.translate("MetafileWidget", "Close", None, QtGui.QApplication.UnicodeUTF8))
         self.actions.setTitle(QtGui.QApplication.translate("MetafileWidget", "Actions", None, QtGui.QApplication.UnicodeUTF8))
-        self.metaInfo.setItemText(self.metaInfo.indexOf(self.fileInfo), QtGui.QApplication.translate("MetafileWidget", "File Informations", None, QtGui.QApplication.UnicodeUTF8))
 

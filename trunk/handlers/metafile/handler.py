@@ -18,6 +18,9 @@ class metafileWidget(QtGui.QWidget):
 		
 		# set the lineEdit-URL to be as high as buttons
 		self.ui.url.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.Preferred)
+		
+		self.ui.metaInfo = QtGui.QToolBox()
+		self.ui.splitter.insertWidget(1, self.ui.metaInfo)
 		# set the "Actions" groupBox to max size
 		self.ui.splitter.setStretchFactor(0,1)
 		
@@ -34,6 +37,18 @@ class metafileWidget(QtGui.QWidget):
 		# set the URL
 		self.ui.url.setText(url)
 		
+		# sample of what this widget could do - if it's image: display it
+		mimetype = unicode(mime.get_mime(url))
+		if isfile(url) and mimetype.startswith('image'):
+			img = QtGui.QPixmap(url)
+			img = img.scaled(300, 300, QtCore.Qt.KeepAspectRatio)
+			label = QtGui.QLabel()
+			label.setPixmap(img)
+			
+			l = QtGui.QHBoxLayout()
+			l.addWidget(label)
+			self.ui.actions.setLayout(l)
+		
 		"""
 		This will have to look better, use QTreeWidget
 		"""
@@ -42,7 +57,6 @@ class metafileWidget(QtGui.QWidget):
 			text = '\n<br />'.join(meta)
 			no_meta = False
 		else:
-			mimetype = unicode(mime.get_mime(url))
 			text = '- Mime: %s<br />' % mimetype
 			no_meta = True
 		textWidget = QtGui.QTextBrowser()
@@ -54,6 +68,7 @@ class metafileWidget(QtGui.QWidget):
 		
 		meta = gnome_meta.get_meta_info(url)
 		app_name = False
+		text = False
 		if meta and len(meta) > 0:
 			text = u'<b>Mime</b>: %s<br />' % meta['mime']
 			text += u'<b>Description</b>: %s<br />' % meta['description'].decode('utf-8')
@@ -70,13 +85,13 @@ class metafileWidget(QtGui.QWidget):
 				for app in meta['other_apps']:
 					if app[1] != app_name:
 						text += u'- %s<br />' % app[1]
-			
-		textWidget = QtGui.QTextBrowser()
-		textWidget.setHtml(text)
-		index  = self.ui.metaInfo.addItem(textWidget, 'GNOME')
-		if no_meta or app_name:
-			self.ui.metaInfo.setCurrentIndex(index)
-			
+		if text:
+			textWidget = QtGui.QTextBrowser()
+			textWidget.setHtml(text)
+			index  = self.ui.metaInfo.addItem(textWidget, 'GNOME')
+			if no_meta or app_name:
+				self.ui.metaInfo.setCurrentIndex(index)
+				
 		
 		# set the tab
 		if newTab:
