@@ -188,7 +188,7 @@ class Dingo(QtGui.QMainWindow):
 				- make a generic url to handler executer here
 				- make a default - no plugin found for this url widget/page
 			"""
-			routing = unicode(url).split('://')
+			routing = unicode(url)
 			print routing
 			print 'nieznany'
 		
