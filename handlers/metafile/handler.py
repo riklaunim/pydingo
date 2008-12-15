@@ -7,8 +7,7 @@ from PyQt4 import QtCore, QtGui, Qsci
 
 from metafileWidget import Ui_MetafileWidget
 from utils import mime
-from utils import hachoir_meta
-from utils import gnome_meta
+from utils import hachoir_meta, gnome_meta, gio_meta
 
 class metafileWidget(QtGui.QWidget):
 	def __init__(self, parent=None, url=False, mainWindow=False, newTab=False):
@@ -91,7 +90,23 @@ class metafileWidget(QtGui.QWidget):
 			index  = self.ui.metaInfo.addItem(textWidget, 'GNOME')
 			if no_meta or app_name:
 				self.ui.metaInfo.setCurrentIndex(index)
-				
+		
+		meta = gio_meta.get_meta_info(url)
+		text = False
+		if meta and len(meta) > 0:
+			text = ''
+			for app in meta:
+				text += u'<b>Application</b>: %s<br />' % app['name']
+				text += u'<b>Description</b>: %s<br />' % app['description'].decode('utf-8')
+				text += u'<b>Executable</b>: %s<br /><br />' % app['exec']
+			
+		if text:
+			textWidget = QtGui.QTextBrowser()
+			textWidget.setHtml(text)
+			index  = self.ui.metaInfo.addItem(textWidget, 'GNOME / GIO')
+			if no_meta and not app_name:
+				self.ui.metaInfo.setCurrentIndex(index)
+		
 		
 		# set the tab
 		if newTab:
