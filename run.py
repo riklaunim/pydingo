@@ -35,7 +35,7 @@ class Dingo(QtGui.QMainWindow):
 		
 		# create the starting tab
 		from handlers.directory import handler
-		self.tab = handler.directoryWidget(self.main, mainWindow=self)
+		self.tab = handler.directoryWidget(mainWindow=self)
 		self.history[self.main.currentIndex()] = [unicode(self.tab.ui.url.text())]
 		self.future[self.main.currentIndex()] = []
 		self.tab.ui.back.setEnabled(False)
@@ -57,7 +57,7 @@ class Dingo(QtGui.QMainWindow):
 		if index == 0:
 			# no more tabs, create a standard new one
 			from handlers.directory import handler
-			self.tab = handler.directoryWidget(self.main, mainWindow=self)
+			self.tab = handler.directoryWidget(mainWindow=self)
 			self.history[self.main.currentIndex()] = [unicode(self.tab.ui.url.text())]
 			self.future[self.main.currentIndex()] = []
 			self.tab.ui.back.setEnabled(False)
@@ -68,7 +68,7 @@ class Dingo(QtGui.QMainWindow):
 		Create a new Tab
 		"""
 		from handlers.directory import handler
-		self.tab = handler.directoryWidget(self.main, mainWindow=self, newTab=True)
+		self.tab = handler.directoryWidget(mainWindow=self, newTab=True)
 		self.history[self.main.currentIndex()] = [unicode(self.tab.ui.url.text())]
 		self.future[self.main.currentIndex()] = []
 		self.tab.ui.back.setEnabled(False)
@@ -167,12 +167,12 @@ class Dingo(QtGui.QMainWindow):
 			if q.isRoot():
 				self.tab.ui.up.setEnabled(False)
 			from handlers.directory import handler
-			self.tab = handler.directoryWidget(self.main, url=url, mainWindow=self)
+			self.tab = handler.directoryWidget(url=url, mainWindow=self)
 		elif isfile(url):
 			mimetype = mime.get_mime(url)
 			if mimetype and mime.is_plaintext(mimetype):
 				from handlers.file import handler
-				self.tab = handler.fileWidget(self.main, url=url, mainWindow=self, mime=mimetype)
+				self.tab = handler.fileWidget(url=url, mainWindow=self, mime=mimetype)
 			else:
 				from handlers.metafile import handler
 				self.tab = handler.metafileWidget(self.main, url=url, mainWindow=self)
@@ -180,7 +180,7 @@ class Dingo(QtGui.QMainWindow):
 			if unicode(url).startswith('www'):
 				url = 'http://%s' % unicode(url)
 			from handlers.http import handler
-			self.tab = handler.httpWidget(self.main, url=url, mainWindow=self)
+			self.tab = handler.httpWidget(url=url, mainWindow=self)
 		else:
 			"""
 			ToDo:

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'metafileWidget.ui'
 #
-# Created: Sun Dec  7 19:04:17 2008
+# Created: Tue Dec 16 12:14:55 2008
 #      by: PyQt4 UI code generator 4.4.4
 #
 # WARNING! All changes made in this file will be lost!
