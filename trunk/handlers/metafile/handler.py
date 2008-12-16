@@ -11,7 +11,7 @@ from utils import hachoir_meta, gnome_meta, gio_meta
 
 class metafileWidget(QtGui.QWidget):
 	def __init__(self, parent=None, url=False, mainWindow=False, newTab=False):
-		super(metafileWidget, self).__init__(parent)
+		super(metafileWidget, self).__init__(mainWindow.main)
 		self.ui = Ui_MetafileWidget()
 		self.ui.setupUi(self)
 		
@@ -23,7 +23,7 @@ class metafileWidget(QtGui.QWidget):
 		# set the "Actions" groupBox to max size
 		self.ui.splitter.setStretchFactor(0,1)
 		
-		self.parent = parent
+		self.parent = mainWindow.main
 		self.mainWindow = mainWindow
 		
 		if not url:
@@ -97,7 +97,8 @@ class metafileWidget(QtGui.QWidget):
 			text = ''
 			for app in meta:
 				text += u'<b>Application</b>: %s<br />' % app['name']
-				text += u'<b>Description</b>: %s<br />' % app['description'].decode('utf-8')
+				if app['description']:
+					text += u'<b>Description</b>: %s<br />' % app['description'].decode('utf-8')
 				text += u'<b>Executable</b>: %s<br /><br />' % app['exec']
 			
 		if text:
@@ -110,13 +111,13 @@ class metafileWidget(QtGui.QWidget):
 		
 		# set the tab
 		if newTab:
-			index = parent.addTab(self, tabName)
-			parent.setCurrentIndex(index)
+			index = self.parent.addTab(self, tabName)
+			self.parent.setCurrentIndex(index)
 		else:
-			index = parent.currentIndex()
-			parent.removeTab(index)
-			parent.insertTab(index, self, tabName)
-			parent.setCurrentIndex(index)
+			index = self.parent.currentIndex()
+			self.parent.removeTab(index)
+			self.parent.insertTab(index, self, tabName)
+			self.parent.setCurrentIndex(index)
 		
 		QtCore.QObject.connect(self.ui.newTab,QtCore.SIGNAL("clicked()"), self.mainWindow.new_tab)
 		QtCore.QObject.connect(self.ui.back,QtCore.SIGNAL("clicked()"), self.mainWindow.back)

@@ -213,6 +213,8 @@
     </widget>
    </item>
   </layout>
+  <zorder>webView</zorder>
+  <zorder>url</zorder>
  </widget>
  <customwidgets>
   <customwidget>

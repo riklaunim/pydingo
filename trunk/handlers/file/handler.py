@@ -9,7 +9,7 @@ from fileWidget import Ui_FileWidget
 
 class fileWidget(QtGui.QWidget):
 	def __init__(self, parent=None, url=False, mainWindow=False, newTab=False, mime=False):
-		super(fileWidget, self).__init__(parent)
+		super(fileWidget, self).__init__(mainWindow.main)
 		self.ui = Ui_FileWidget()
 		self.ui.setupUi(self)
 		# kill the margin between widgets
@@ -20,11 +20,12 @@ class fileWidget(QtGui.QWidget):
 		# set the first box of navigation menu to get maximum size (that one with lineEdit-URL)
 		self.ui.splitter.setStretchFactor(0,1)
 		
-		self.parent = parent
+		self.parent = mainWindow.main
 		self.mainWindow = mainWindow
 		
 		if not url:
 			url = self.ui.url.text()
+		self.url = url
 		
 		# use filename for tab name
 		tabName = url.split('/')
@@ -125,20 +126,296 @@ class fileWidget(QtGui.QWidget):
 		
 		# set the tab
 		if newTab:
-			index = parent.addTab(self, tabName)
-			parent.setCurrentIndex(index)
+			index = self.parent.addTab(self, tabName)
+			self.parent.setCurrentIndex(index)
 		else:
-			index = parent.currentIndex()
-			parent.removeTab(index)
-			parent.insertTab(index, self, tabName)
-			parent.setCurrentIndex(index)
+			index = self.parent.currentIndex()
+			self.parent.removeTab(index)
+			self.parent.insertTab(index, self, tabName)
+			self.parent.setCurrentIndex(index)
+		
+		
+		QtCore.QObject.connect(self.ui.editor,QtCore.SIGNAL("textChanged()"), self.file_modified)
+		QtCore.QObject.connect(self.ui.save,QtCore.SIGNAL("clicked()"), self.file_save)
+		QtCore.QObject.connect(self.ui.saveas,QtCore.SIGNAL("clicked()"), self.file_saveAs)
+		QtCore.QObject.connect(self.ui.undo,QtCore.SIGNAL("clicked()"), self.file_undo)
+		QtCore.QObject.connect(self.ui.redo,QtCore.SIGNAL("clicked()"), self.file_redo)
+		QtCore.QObject.connect(self.ui.find,QtCore.SIGNAL("clicked()"), self.file_find)
 		
 		QtCore.QObject.connect(self.ui.newTab,QtCore.SIGNAL("clicked()"), self.mainWindow.new_tab)
-		QtCore.QObject.connect(self.ui.back,QtCore.SIGNAL("clicked()"), self.mainWindow.back)
-		QtCore.QObject.connect(self.ui.next,QtCore.SIGNAL("clicked()"), self.mainWindow.next)
-		QtCore.QObject.connect(self.ui.close,QtCore.SIGNAL("clicked()"), self.mainWindow.close_tab)
-		QtCore.QObject.connect(self.ui.up,QtCore.SIGNAL("clicked()"), self.mainWindow.up_clicked)
-		QtCore.QObject.connect(self.ui.home,QtCore.SIGNAL("clicked()"), self.mainWindow.home_clicked)
-		QtCore.QObject.connect(self.ui.url,QtCore.SIGNAL("returnPressed()"), self.mainWindow.url_handler)
+		QtCore.QObject.connect(self.ui.back,QtCore.SIGNAL("clicked()"), self.back)
+		QtCore.QObject.connect(self.ui.next,QtCore.SIGNAL("clicked()"), self.next)
+		QtCore.QObject.connect(self.ui.close,QtCore.SIGNAL("clicked()"), self.close_tab)
+		QtCore.QObject.connect(self.ui.up,QtCore.SIGNAL("clicked()"), self.up_clicked)
+		QtCore.QObject.connect(self.ui.home,QtCore.SIGNAL("clicked()"), self.home)
+		QtCore.QObject.connect(self.ui.url,QtCore.SIGNAL("returnPressed()"), self.url_handler)
 		QtCore.QMetaObject.connectSlotsByName(self)
 	
+	def file_find(self):
+		"""
+		Find icon clicked
+		* ToDo: add menu here for find, find/replace, find next
+		"""
+		if not self.ui.editor.findNext():
+			response = QtGui.QInputDialog.getText(self, 'Find', 'Find:', QtGui.QLineEdit.Normal)
+			if response[1] and len(response[0]) > 0:
+				self.ui.editor.findFirst(response[0], False, False, False, False)
+	
+	def file_modified(self):
+		"""
+		File text in the editor changed
+		* enable save button
+		* check if undo/redo button can be activated and do it
+		"""
+		self.ui.save.setEnabled(True)
+		
+		if self.ui.editor.isRedoAvailable():
+			self.ui.redo.setEnabled(True)
+		else:
+			self.ui.redo.setEnabled(False)
+		
+		if self.ui.editor.isUndoAvailable():
+			self.ui.undo.setEnabled(True)
+		else:
+			self.ui.undo.setEnabled(False)
+	
+	def file_undo(self):
+		"""
+		Undo button clicked
+		* undo one action
+		* check if there are undos/redos available etc
+		"""
+		self.ui.editor.undo()
+		
+		if self.ui.editor.isRedoAvailable():
+			self.ui.redo.setEnabled(True)
+		else:
+			self.ui.redo.setEnabled(False)
+		
+		if self.ui.editor.isUndoAvailable():
+			self.ui.undo.setEnabled(True)
+		else:
+			self.ui.undo.setEnabled(False)
+		
+		if self.ui.editor.isModified():
+			self.ui.save.setEnabled(True)
+		else:
+			self.ui.save.setEnabled(False)
+	
+	def file_redo(self):
+		"""
+		Redi button clicked
+		* redo one action
+		* check if there are undos/redos available etc
+		"""
+		self.ui.editor.redo()
+		
+		if self.ui.editor.isRedoAvailable():
+			self.ui.redo.setEnabled(True)
+		else:
+			self.ui.redo.setEnabled(False)
+		
+		if self.ui.editor.isUndoAvailable():
+			self.ui.undo.setEnabled(True)
+		else:
+			self.ui.undo.setEnabled(False)
+		
+		if self.ui.editor.isModified():
+			self.ui.save.setEnabled(True)
+		else:
+			self.ui.save.setEnabled(False)
+	
+	def file_save(self):
+		"""
+		save button clicked, save the changes
+		"""
+		text = self.ui.editor.text()
+		handle = open(self.url, 'w')
+		handle.write(text)
+		handle.close()
+		self.ui.save.setEnabled(False)
+		self.ui.editor.setModified(False)
+	
+	def file_saveAs(self):
+		"""
+		Save As button clicked
+		* show file dialog and enable saving under different name
+		"""
+		fd = QtGui.QFileDialog(self)
+		newfile = fd.getSaveFileName()
+		if newfile:
+			s = open(newfile,'w')
+			s.write(self.ui.editor.text())
+			s.close()
+			
+			self.ui.save.setEnabled(False)
+			self.ui.editor.setModified(False)
+			
+			## new file, remove old and add the new one to the watcher
+			#if self.filename and str(newfile) != str(self.filename):
+				#self.watcher.removePath(self.filename)
+				#self.watcher.addPath(newfile)
+				#self.filename = newfile
+	
+	####################
+	def back(self):
+		"""
+		Extend the Back button click to handle not saved modified files
+		"""
+		if self.ui.editor.isModified():
+			SAVE = 'Save And Go'
+			DISCARD = 'Discard Changes'
+			CANCEL = 'Cancel'
+			
+			message = QtGui.QMessageBox(self)
+			message.setText('Changes haven\'t been saved')
+			message.setWindowTitle('PyDingo Text Editor')
+			message.setIcon(QtGui.QMessageBox.Question)
+			message.addButton(SAVE, QtGui.QMessageBox.AcceptRole)
+			message.addButton(DISCARD, QtGui.QMessageBox.DestructiveRole)
+			message.addButton(CANCEL, QtGui.QMessageBox.RejectRole)
+			message.setDetailedText('Unsaved changes in: ' + self.ui.url.text())
+			message.exec_()
+			response = message.clickedButton().text()
+			if response == DISCARD:
+				self.mainWindow.back()
+			elif response == SAVE:
+				self.file_save()
+				self.mainWindow.back()
+		else:
+			self.mainWindow.back()
+	
+	def next(self):
+		"""
+		Extend the Next button click to handle not saved modified files
+		"""
+		if self.ui.editor.isModified():
+			SAVE = 'Save And Go'
+			DISCARD = 'Discard Changes'
+			CANCEL = 'Cancel'
+			
+			message = QtGui.QMessageBox(self)
+			message.setText('Changes haven\'t been saved')
+			message.setWindowTitle('PyDingo Text Editor')
+			message.setIcon(QtGui.QMessageBox.Question)
+			message.addButton(SAVE, QtGui.QMessageBox.AcceptRole)
+			message.addButton(DISCARD, QtGui.QMessageBox.DestructiveRole)
+			message.addButton(CANCEL, QtGui.QMessageBox.RejectRole)
+			message.setDetailedText('Unsaved changes in: ' + self.ui.url.text())
+			message.exec_()
+			response = message.clickedButton().text()
+			if response == DISCARD:
+				self.mainWindow.next()
+			elif response == SAVE:
+				self.file_save()
+				self.mainWindow.next()
+		else:
+			self.mainWindow.next()
+	
+	def close_tab(self):
+		"""
+		Extend the Close Tab button click to handle not saved modified files
+		"""
+		if self.ui.editor.isModified():
+			SAVE = 'Save And Go'
+			DISCARD = 'Discard Changes'
+			CANCEL = 'Cancel'
+			
+			message = QtGui.QMessageBox(self)
+			message.setText('Changes haven\'t been saved')
+			message.setWindowTitle('PyDingo Text Editor')
+			message.setIcon(QtGui.QMessageBox.Question)
+			message.addButton(SAVE, QtGui.QMessageBox.AcceptRole)
+			message.addButton(DISCARD, QtGui.QMessageBox.DestructiveRole)
+			message.addButton(CANCEL, QtGui.QMessageBox.RejectRole)
+			message.setDetailedText('Unsaved changes in: ' + self.ui.url.text())
+			message.exec_()
+			response = message.clickedButton().text()
+			if response == DISCARD:
+				self.mainWindow.close_tab()
+			elif response == SAVE:
+				self.file_save()
+				self.mainWindow.close_tab()
+		else:
+			self.mainWindow.close_tab()
+	
+	def up_clicked(self):
+		"""
+		Extend the UP button click to handle not saved modified files
+		"""
+		if self.ui.editor.isModified():
+			SAVE = 'Save And Go'
+			DISCARD = 'Discard Changes'
+			CANCEL = 'Cancel'
+			
+			message = QtGui.QMessageBox(self)
+			message.setText('Changes haven\'t been saved')
+			message.setWindowTitle('PyDingo Text Editor')
+			message.setIcon(QtGui.QMessageBox.Question)
+			message.addButton(SAVE, QtGui.QMessageBox.AcceptRole)
+			message.addButton(DISCARD, QtGui.QMessageBox.DestructiveRole)
+			message.addButton(CANCEL, QtGui.QMessageBox.RejectRole)
+			message.setDetailedText('Unsaved changes in: ' + self.ui.url.text())
+			message.exec_()
+			response = message.clickedButton().text()
+			if response == DISCARD:
+				self.mainWindow.up_clicked()
+			elif response == SAVE:
+				self.file_save()
+				self.mainWindow.up_clicked()
+		else:
+			self.mainWindow.up_clicked()
+	
+	def url_handler(self):
+		"""
+		Extend the URL change to handle not saved modified files
+		"""
+		if self.ui.editor.isModified():
+			SAVE = 'Save And Go'
+			DISCARD = 'Discard Changes'
+			CANCEL = 'Cancel'
+			
+			message = QtGui.QMessageBox(self)
+			message.setText('Changes haven\'t been saved')
+			message.setWindowTitle('PyDingo Text Editor')
+			message.setIcon(QtGui.QMessageBox.Question)
+			message.addButton(SAVE, QtGui.QMessageBox.AcceptRole)
+			message.addButton(DISCARD, QtGui.QMessageBox.DestructiveRole)
+			message.addButton(CANCEL, QtGui.QMessageBox.RejectRole)
+			message.setDetailedText('Unsaved changes in: ' + self.url)
+			message.exec_()
+			response = message.clickedButton().text()
+			if response == DISCARD:
+				self.mainWindow.url_handler()
+			elif response == SAVE:
+				self.file_save()
+				self.mainWindow.url_handler()
+		else:
+			self.mainWindow.url_handler()
+	
+	def home(self):
+		"""
+		Extend the home button click to handle not saved modified files
+		"""
+		if self.ui.editor.isModified():
+			SAVE = 'Save And Go'
+			DISCARD = 'Discard Changes'
+			CANCEL = 'Cancel'
+			
+			message = QtGui.QMessageBox(self)
+			message.setText('Changes haven\'t been saved')
+			message.setWindowTitle('PyDingo Text Editor')
+			message.setIcon(QtGui.QMessageBox.Question)
+			message.addButton(SAVE, QtGui.QMessageBox.AcceptRole)
+			message.addButton(DISCARD, QtGui.QMessageBox.DestructiveRole)
+			message.addButton(CANCEL, QtGui.QMessageBox.RejectRole)
+			message.setDetailedText('Unsaved changes in: ' + self.ui.url.text())
+			message.exec_()
+			response = message.clickedButton().text()
+			if response == DISCARD:
+				self.mainWindow.home_clicked()
+			elif response == SAVE:
+				self.file_save()
+				self.mainWindow.home_clicked()
+		else:
+			self.mainWindow.home_clicked()

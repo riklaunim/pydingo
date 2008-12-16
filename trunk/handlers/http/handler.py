@@ -5,10 +5,10 @@ from httpWidget import Ui_HttpWidget
 
 class httpWidget(QtGui.QWidget):
 	def __init__(self, parent=None, url=False, mainWindow=False, newTab=False):
-		super(httpWidget, self).__init__(parent)
+		super(httpWidget, self).__init__(mainWindow.main)
 		self.ui = Ui_HttpWidget()
 		self.ui.setupUi(self)
-		self.parent = parent
+		self.parent = mainWindow.main
 		self.mainWindow = mainWindow
 		# set the lineEdit-URL to be as high as buttons
 		self.ui.url.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.Preferred)
@@ -30,13 +30,13 @@ class httpWidget(QtGui.QWidget):
 		self.ui.webView.setUrl(QtCore.QUrl(url))
 		
 		if newTab:
-			index = parent.addTab(self, tabName)
-			parent.setCurrentIndex(index)
+			index = self.parent.addTab(self, tabName)
+			self.parent.setCurrentIndex(index)
 		else:
-			index = parent.currentIndex()
-			parent.removeTab(index)
-			parent.insertTab(index, self, tabName)
-			parent.setCurrentIndex(index)
+			index = self.parent.currentIndex()
+			self.parent.removeTab(index)
+			self.parent.insertTab(index, self, tabName)
+			self.parent.setCurrentIndex(index)
 		
 		QtCore.QObject.connect(self.ui.newTab,QtCore.SIGNAL("clicked()"), self.mainWindow.new_tab)
 		QtCore.QObject.connect(self.ui.close,QtCore.SIGNAL("clicked()"), self.mainWindow.close_tab)

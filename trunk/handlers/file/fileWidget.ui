@@ -12,14 +12,14 @@
   <property name="windowTitle" >
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout" >
-   <item row="0" column="0" >
+  <layout class="QVBoxLayout" name="verticalLayout" >
+   <item>
     <widget class="QSplitter" name="splitter" >
      <property name="orientation" >
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="QWidget" name="layoutWidget" >
-      <layout class="QHBoxLayout" name="horizontalLayout" >
+     <widget class="QWidget" name="" >
+      <layout class="QHBoxLayout" name="horizontalLayout_2" >
        <item>
         <widget class="QPushButton" name="newTab" >
          <property name="toolTip" >
@@ -128,8 +128,8 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="layoutWidget" >
-      <layout class="QHBoxLayout" name="horizontalLayout_2" >
+     <widget class="QWidget" name="" >
+      <layout class="QHBoxLayout" name="horizontalLayout" >
        <item>
         <widget class="QPushButton" name="save" >
          <property name="enabled" >
@@ -286,7 +286,7 @@
      </widget>
     </widget>
    </item>
-   <item row="1" column="0" >
+   <item>
     <widget class="QsciScintilla" name="editor" >
      <property name="toolTip" >
       <string/>
@@ -297,9 +297,6 @@
     </widget>
    </item>
   </layout>
-  <zorder>splitter</zorder>
-  <zorder>editor</zorder>
-  <zorder>splitter</zorder>
  </widget>
  <customwidgets>
   <customwidget>

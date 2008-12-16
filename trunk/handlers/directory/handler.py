@@ -15,10 +15,11 @@ class FileManagerWidget(QtGui.QListWidget):
 		
 		# configure the items list
 		self.setViewMode(QtGui.QListView.IconMode)
-		self.setLayoutMode(QtGui.QListView.SinglePass)
 		self.setResizeMode(QtGui.QListView.Adjust)
-		self.setGridSize(QtCore.QSize(75, 75))
+		self.setGridSize(QtCore.QSize(80, 95))
 		self.setIconSize(QtCore.QSize(48, 48))
+		self.setDragDropMode(QtGui.QAbstractItemView.InternalMove)
+		self.setSelectionMode(QtGui.QAbstractItemView.ContiguousSelection)
 		self.setWordWrap(True)
 		self.setWrapping(True)
 		
@@ -38,20 +39,25 @@ class FileManagerWidget(QtGui.QListWidget):
 			if button == 1:
 				self.item_clicked()
 	
-	def mousePressEvent(self, event):
-		"""
-		Handle the event.
-		* for left clicks - ability to drag item
-		* for right clicks - show context menu
-		"""
-		button = event.button()
-		item = self.itemAt(event.x(), event.y())
-		if item:
-			self.setCurrentItem(item)
-			if button == 1:
-				print 'LEFT DRAG'
-		if button == 2:
-			print 'Right'
+	def dropEvent(self, event):
+		print 'Drop'
+		print event
+		print self.dropIndicatorPosition()
+		print
+	#def mousePressEvent(self, event):
+		#"""
+		#Handle the event.
+		#* for left clicks - ability to drag item
+		#* for right clicks - show context menu
+		#"""
+		#button = event.button()
+		#item = self.itemAt(event.x(), event.y())
+		#if item:
+			#self.setCurrentItem(item)
+			#if button == 1:
+				#print 'LEFT DRAG'
+		#if button == 2:
+			#print 'Right'
 	
 	def item_clicked(self):
 		"""
@@ -73,13 +79,13 @@ class FileManagerWidget(QtGui.QListWidget):
 
 class directoryWidget(QtGui.QWidget):
 	def __init__(self, parent=None, url=False, mainWindow=False, newTab=False):
-		super(directoryWidget, self).__init__(parent)
+		super(directoryWidget, self).__init__(mainWindow.main)
 		self.ui = Ui_DirectoryWidget()
 		self.ui.setupUi(self)
 		layout = self.layout()
 		self.ui.items = FileManagerWidget(parent=self)
 		layout.addWidget(self.ui.items)
-		self.parent = parent
+		self.parent = mainWindow.main
 		self.mainWindow = mainWindow
 		# set the lineEdit-URL to be as high as buttons
 		self.ui.url.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.Preferred)
@@ -144,7 +150,7 @@ class directoryWidget(QtGui.QWidget):
 					itm.setIcon(QtGui.QIcon('media/mime_icons/openofficeorg-20-oasis-spreadsheet.png'))
 				elif mimetype == 'application/vnd.oasis.opendocument.graphics':
 					itm.setIcon(QtGui.QIcon('media/mime_icons/openofficeorg-20-oasis-drawing.png'))
-				elif mimetype == 'application/vnd.oasis.opendocument.text' or mimetype.find('msword') != -1:
+				elif mimetype == 'application/vnd.oasis.opendocument.text' or mimetype.find('msword') != -1 or mimetype == 'application/x-chm':
 					itm.setIcon(QtGui.QIcon('media/mime_icons/openofficeorg-20-oasis-text.png'))
 				elif mimetype.find('bytecode') != -1:
 					itm.setIcon(QtGui.QIcon('media/mime_icons/bytecode.png'))
@@ -156,13 +162,13 @@ class directoryWidget(QtGui.QWidget):
 			self.ui.items.addItem(itm)
 		
 		if newTab:
-			index = parent.addTab(self, tabName)
-			parent.setCurrentIndex(index)
+			index = self.parent.addTab(self, tabName)
+			self.parent.setCurrentIndex(index)
 		else:
-			index = parent.currentIndex()
-			parent.removeTab(index)
-			parent.insertTab(index, self, tabName)
-			parent.setCurrentIndex(index)
+			index = self.parent.currentIndex()
+			self.parent.removeTab(index)
+			self.parent.insertTab(index, self, tabName)
+			self.parent.setCurrentIndex(index)
 		
 		QtCore.QObject.connect(self.ui.newTab,QtCore.SIGNAL("clicked()"), self.mainWindow.new_tab)
 		QtCore.QObject.connect(self.ui.back,QtCore.SIGNAL("clicked()"), self.mainWindow.back)
