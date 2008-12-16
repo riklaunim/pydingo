@@ -229,6 +229,12 @@ class fileWidget(QtGui.QWidget):
 		"""
 		save button clicked, save the changes
 		"""
+		# backup
+		backup = open(self.url, 'r').read()
+		handle = open('%s~' % self.url, 'w')
+		handle.write(backup)
+		handle.close()
+		
 		text = self.ui.editor.text()
 		handle = open(self.url, 'w')
 		handle.write(text)
