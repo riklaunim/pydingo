@@ -144,6 +144,8 @@ class directoryWidget(QtGui.QWidget):
 					itm.setIcon(QtGui.QIcon('media/mime_icons/html.png'))
 				elif mimetype == 'application/x-cd-image':
 					itm.setIcon(QtGui.QIcon('media/mime_icons/iso.png'))
+				elif mimetype == 'application/x-trash':
+					itm.setIcon(QtGui.QIcon('media/mime_icons/recycled.png'))
 				elif mimetype == 'application/vnd.oasis.opendocument.presentation' or mimetype.find('powerpoint') != -1:
 					itm.setIcon(QtGui.QIcon('media/mime_icons/openofficeorg-20-oasis-presentation.png'))
 				elif mimetype.find('spreadsheet') != -1:
