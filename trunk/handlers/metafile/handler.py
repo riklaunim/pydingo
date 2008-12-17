@@ -98,20 +98,20 @@ class metafileWidget(QtGui.QWidget):
 			
 			if meta['default_app'] and len(meta['default_app']) > 0:
 				app = AppButton(appDB = self.appDB)
-				app.setText(meta['default_app'][1])
+				app.setText(meta['default_app'][1].decode('utf-8'))
 				
 				app_name = meta['default_app'][1]
 				#app_desktop = meta['default_app'][0]
 				#app_bin = meta['default_app'][2]
-				self.appDB[meta['default_app'][1]] = meta['default_app'][2]
+				self.appDB[meta['default_app'][1].decode('utf-8')] = meta['default_app'][2]
 				gnomeLayout.addWidget(app)
 			
 			if meta['other_apps'] and len(meta['other_apps']) > 1:
 				for application in meta['other_apps']:
 					app = AppButton(appDB = self.appDB)
-					app.setText(application[1])
+					app.setText(application[1].decode('utf-8'))
 					
-					self.appDB[application[1]] = application[2]
+					self.appDB[application[1].decode('utf-8')] = application[2]
 					#app_desktop = application[0]
 					#app_bin = application[2]
 					gnomeLayout.addWidget(app)
@@ -130,9 +130,9 @@ class metafileWidget(QtGui.QWidget):
 			gioLayout = QtGui.QVBoxLayout()
 			for application in meta:
 				app = AppButton(appDB = self.appDB)
-				app.setText(application['name'])
+				app.setText(application['name'].decode('utf-8'))
 				
-				self.appDB[application['name']] = application['exec']
+				self.appDB[application['name'].decode('utf-8')] = application['exec']
 				gioLayout.addWidget(app)
 				#if app['description']:
 					#text += u'<b>Description</b>: %s<br />' % app['description'].decode('utf-8')
