@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import codecs
-from os import listdir
+from os import listdir, system
 from os.path import isfile, isdir, expanduser, join
 
 from PyQt4 import QtCore, QtGui, Qsci
@@ -8,6 +8,22 @@ from PyQt4 import QtCore, QtGui, Qsci
 from metafileWidget import Ui_MetafileWidget
 from utils import mime
 from utils import hachoir_meta, gnome_meta, gio_meta
+
+
+class AppButton(QtGui.QPushButton):
+	def __init__(self, parent=None, appDB=False):
+		"""
+		Push Buttons for opening selected file in suggested app
+		"""
+		super(AppButton, self).__init__(parent)
+		self.appDB = appDB
+		QtCore.QMetaObject.connectSlotsByName(self)
+	
+	def mousePressEvent(self, event):
+		key = unicode(self.text())
+		if self.appDB.has_key(key):
+			system('%s %s' % (self.appDB[key], self.appDB['URL']))
+		
 
 class metafileWidget(QtGui.QWidget):
 	def __init__(self, parent=None, url=False, mainWindow=False, newTab=False):
@@ -28,6 +44,9 @@ class metafileWidget(QtGui.QWidget):
 		
 		if not url:
 			url = self.ui.url.text()
+		
+		# apps for a file DB
+		self.appDB = {'URL': url}
 		
 		# use filename for tab name
 		tabName = url.split('/')
@@ -78,15 +97,21 @@ class metafileWidget(QtGui.QWidget):
 			gnomeLayout.addWidget(mimeLabel)
 			
 			if meta['default_app'] and len(meta['default_app']) > 0:
-				app = QtGui.QPushButton(meta['default_app'][1])
+				app = AppButton(appDB = self.appDB)
+				app.setText(meta['default_app'][1])
+				
 				app_name = meta['default_app'][1]
 				#app_desktop = meta['default_app'][0]
 				#app_bin = meta['default_app'][2]
+				self.appDB[meta['default_app'][1]] = meta['default_app'][2]
 				gnomeLayout.addWidget(app)
 			
 			if meta['other_apps'] and len(meta['other_apps']) > 1:
 				for application in meta['other_apps']:
-					app = QtGui.QPushButton(application[1])
+					app = AppButton(appDB = self.appDB)
+					app.setText(application[1])
+					
+					self.appDB[application[1]] = application[2]
 					#app_desktop = application[0]
 					#app_bin = application[2]
 					gnomeLayout.addWidget(app)
@@ -103,8 +128,11 @@ class metafileWidget(QtGui.QWidget):
 		meta = gio_meta.get_meta_info(url)
 		if meta and len(meta) > 0:
 			gioLayout = QtGui.QVBoxLayout()
-			for app in meta:
-				app = QtGui.QPushButton(app['name'])
+			for application in meta:
+				app = AppButton(appDB = self.appDB)
+				app.setText(application['name'])
+				
+				self.appDB[application['name']] = application['exec']
 				gioLayout.addWidget(app)
 				#if app['description']:
 					#text += u'<b>Description</b>: %s<br />' % app['description'].decode('utf-8')
