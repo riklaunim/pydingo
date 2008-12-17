@@ -53,6 +53,8 @@ class fileWidget(QtGui.QWidget):
 		self.ui.editor.setMarginWidth(0, fm.width( "00000" ) + 5)
 		self.ui.editor.setMarginLineNumbers(0, True)
 		self.ui.editor.setBraceMatching(Qsci.QsciScintilla.SloppyBraceMatch)
+		self.ui.editor.setFolding(Qsci.QsciScintilla.BoxedTreeFoldStyle)
+		self.ui.editor.setAutoIndent(True)
 		
 		if mimetype:
 			if mimetype == 'application/x-csh' or mimetype == 'application/x-sh' or mimetype == 'text/x-script.zsh' or mimetype == 'application/x-shellscript':
