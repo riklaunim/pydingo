@@ -23,6 +23,9 @@ class fileWidget(QtGui.QWidget):
 		self.parent = mainWindow.main
 		self.mainWindow = mainWindow
 		
+		# monitor file for changes
+		self.watcher = QtCore.QFileSystemWatcher(self)
+		
 		if not url:
 			url = self.ui.url.text()
 		self.url = url
@@ -122,7 +125,11 @@ class fileWidget(QtGui.QWidget):
 		except:
 			text = open(url).read()
 
+		# load file text
 		self.ui.editor.setText(text)
+		# set file watcher:
+		self.watcher.addPath(self.url)
+		self.ui.editor.setModified(False)
 		
 		# set the tab
 		if newTab:
@@ -141,6 +148,8 @@ class fileWidget(QtGui.QWidget):
 		QtCore.QObject.connect(self.ui.undo,QtCore.SIGNAL("clicked()"), self.file_undo)
 		QtCore.QObject.connect(self.ui.redo,QtCore.SIGNAL("clicked()"), self.file_redo)
 		QtCore.QObject.connect(self.ui.find,QtCore.SIGNAL("clicked()"), self.file_find)
+		# detect external changes to open file
+		QtCore.QObject.connect(self.watcher,QtCore.SIGNAL("fileChanged(const QString&)"), self.file_changed)
 		
 		QtCore.QObject.connect(self.ui.newTab,QtCore.SIGNAL("clicked()"), self.mainWindow.new_tab)
 		QtCore.QObject.connect(self.ui.back,QtCore.SIGNAL("clicked()"), self.back)
@@ -160,6 +169,41 @@ class fileWidget(QtGui.QWidget):
 			response = QtGui.QInputDialog.getText(self, 'Find', 'Find:', QtGui.QLineEdit.Normal)
 			if response[1] and len(response[0]) > 0:
 				self.ui.editor.findFirst(response[0], False, False, False, False)
+	
+	def file_changed(self, path):
+		response = False
+		# disable watcher and modification state of the file so this wont call itself
+		self.watcher.removePath(self.url)
+		self.ui.editor.setModified(False)
+		# buttons texts
+		SAVE = 'Save As'
+		RELOAD = 'Reload File'
+		CANCEL = 'Cancel'
+		message = QtGui.QMessageBox(self)
+		message.setText('Open file have been changed !')
+		message.setWindowTitle('PyDingo Text Editor')
+		message.setIcon(QtGui.QMessageBox.Warning)
+		message.addButton(SAVE, QtGui.QMessageBox.AcceptRole)
+		message.addButton(RELOAD, QtGui.QMessageBox.DestructiveRole)
+		message.addButton(CANCEL, QtGui.QMessageBox.RejectRole)
+		message.setDetailedText('The file "' + str(path) + '" have been changed or removed by other application. What do you want to do ?')
+		message.exec_()
+		response = message.clickedButton().text()
+		# save current file under a new or old name
+		if response == SAVE:
+			fd = QtGui.QFileDialog(self)
+			newfile = fd.getSaveFileName()
+			if newfile:
+				s = open(newfile,'w')
+				s.write(self.ui.editor.text())
+				s.close()
+				self.mainWindow.url_handler(url=newfile)
+		# reload the text in the editor
+		elif response == RELOAD:
+			self.mainWindow.url_handler()
+		else:
+			# add watcher (Cancel pressed)
+			self.watcher.addPath(self.url)
 	
 	def file_modified(self):
 		"""
@@ -235,10 +279,12 @@ class fileWidget(QtGui.QWidget):
 		handle.write(backup)
 		handle.close()
 		
+		self.watcher.removePath(self.url)
 		text = self.ui.editor.text()
 		handle = open(self.url, 'w')
 		handle.write(text)
 		handle.close()
+		self.watcher.addPath(self.url)
 		self.ui.save.setEnabled(False)
 		self.ui.editor.setModified(False)
 	
@@ -247,6 +293,7 @@ class fileWidget(QtGui.QWidget):
 		Save As button clicked
 		* show file dialog and enable saving under different name
 		"""
+		self.watcher.removePath(self.url)
 		fd = QtGui.QFileDialog(self)
 		newfile = fd.getSaveFileName()
 		if newfile:
@@ -255,6 +302,8 @@ class fileWidget(QtGui.QWidget):
 			s.close()
 			
 			self.ui.save.setEnabled(False)
+			self.ui.url.setText(newfile)
+			self.watcher.addPath(newfile)
 			self.ui.editor.setModified(False)
 			
 			## new file, remove old and add the new one to the watcher

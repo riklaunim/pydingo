@@ -60,51 +60,61 @@ class metafileWidget(QtGui.QWidget):
 			no_meta = True
 		textWidget = QtGui.QTextBrowser()
 		textWidget.setHtml(text)
-		index = self.ui.metaInfo.currentIndex()
-		self.ui.metaInfo.removeItem(index)
-		self.ui.metaInfo.insertItem(index, textWidget, 'File Info')
+		index = self.ui.metaInfo.addItem(textWidget, 'File Info')
 		self.ui.metaInfo.setCurrentIndex(index)
 		
 		meta = gnome_meta.get_meta_info(url)
 		app_name = False
-		text = False
 		if meta and len(meta) > 0:
-			text = u'<b>Mime</b>: %s<br />' % meta['mime']
-			text += u'<b>Description</b>: %s<br />' % meta['description'].decode('utf-8')
+			gnomeLayout = QtGui.QVBoxLayout()
+			
+			description = QtGui.QLabel('<b>%s</b>' % meta['description'].decode('utf-8'))
+			description.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+			gnomeLayout.addWidget(description)
+			
+			metaText = meta['mime'].replace('/', '\n')
+			mimeLabel = QtGui.QLabel(metaText)
+			mimeLabel.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+			gnomeLayout.addWidget(mimeLabel)
+			
 			if meta['default_app'] and len(meta['default_app']) > 0:
-				app_desktop = meta['default_app'][0]
+				app = QtGui.QPushButton(meta['default_app'][1])
 				app_name = meta['default_app'][1]
-				app_bin = meta['default_app'][2]
-				"""
-				ToDo: execute with application
-				"""
-				text += u'<b>Default application</b>: %s<br />' % app_name
+				#app_desktop = meta['default_app'][0]
+				#app_bin = meta['default_app'][2]
+				gnomeLayout.addWidget(app)
+			
 			if meta['other_apps'] and len(meta['other_apps']) > 1:
-				text += u'<b>Other applications</b>:<br />'
-				for app in meta['other_apps']:
-					if app[1] != app_name:
-						text += u'- %s<br />' % app[1]
-		if text:
-			textWidget = QtGui.QTextBrowser()
-			textWidget.setHtml(text)
-			index  = self.ui.metaInfo.addItem(textWidget, 'GNOME')
+				for application in meta['other_apps']:
+					app = QtGui.QPushButton(application[1])
+					#app_desktop = application[0]
+					#app_bin = application[2]
+					gnomeLayout.addWidget(app)
+			
+			# add the layout with widgets to a frame
+			gnomeLayout.addItem(QtGui.QSpacerItem(20, 209, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding))
+			frame = QtGui.QFrame()
+			frame.setLayout(gnomeLayout)
+			
+			index  = self.ui.metaInfo.addItem(frame, 'GNOME')
 			if no_meta or app_name:
 				self.ui.metaInfo.setCurrentIndex(index)
 		
 		meta = gio_meta.get_meta_info(url)
-		text = False
 		if meta and len(meta) > 0:
-			text = ''
+			gioLayout = QtGui.QVBoxLayout()
 			for app in meta:
-				text += u'<b>Application</b>: %s<br />' % app['name']
-				if app['description']:
-					text += u'<b>Description</b>: %s<br />' % app['description'].decode('utf-8')
-				text += u'<b>Executable</b>: %s<br /><br />' % app['exec']
+				app = QtGui.QPushButton(app['name'])
+				gioLayout.addWidget(app)
+				#if app['description']:
+					#text += u'<b>Description</b>: %s<br />' % app['description'].decode('utf-8')
+				#text += u'<b>Executable</b>: %s<br /><br />' % app['exec']
 			
-		if text:
-			textWidget = QtGui.QTextBrowser()
-			textWidget.setHtml(text)
-			index  = self.ui.metaInfo.addItem(textWidget, 'GNOME / GIO')
+			gioLayout.addItem(QtGui.QSpacerItem(20, 209, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding))
+			frame = QtGui.QFrame()
+			frame.setLayout(gioLayout)
+			
+			index  = self.ui.metaInfo.addItem(frame, 'GNOME / GIO')
 			if no_meta and not app_name:
 				self.ui.metaInfo.setCurrentIndex(index)
 		

@@ -13,5 +13,7 @@ def get_meta_info(filename):
 	ret['mime'] = file_mimetype
 	ret['default_app'] = gnomevfs.mime_get_default_application(file_mimetype)
 	ret['other_apps'] = gnomevfs.mime_get_all_applications(file_mimetype)
+	if len(ret['other_apps']) > 0:
+		del ret['other_apps'][0]
 	ret ['description'] = gnomevfs.mime_get_description(file_mimetype)
 	return ret
