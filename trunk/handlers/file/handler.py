@@ -143,6 +143,18 @@ class fileWidget(QtGui.QWidget):
 			self.parent.insertTab(index, self, tabName)
 			self.parent.setCurrentIndex(index)
 		
+		# Key shortcuts
+		find = QtGui.QKeySequence(QtGui.QKeySequence.Find)
+		self.ui.find.setShortcut(find)
+		
+		redo = QtGui.QKeySequence(QtGui.QKeySequence.Redo)
+		self.ui.redo.setShortcut(redo)
+		
+		undo = QtGui.QKeySequence(QtGui.QKeySequence.Undo)
+		self.ui.undo.setShortcut(undo)
+		
+		save = QtGui.QKeySequence(QtGui.QKeySequence.Save)
+		self.ui.save.setShortcut(save)
 		
 		QtCore.QObject.connect(self.ui.editor,QtCore.SIGNAL("textChanged()"), self.file_modified)
 		QtCore.QObject.connect(self.ui.save,QtCore.SIGNAL("clicked()"), self.file_save)
@@ -167,10 +179,14 @@ class fileWidget(QtGui.QWidget):
 		Find icon clicked
 		* ToDo: add menu here for find, find/replace, find next
 		"""
-		if not self.ui.editor.findNext():
+		if self.ui.editor.hasSelectedText():
+			response = QtGui.QInputDialog.getText(self, 'Find', 'Find:', QtGui.QLineEdit.Normal, self.ui.editor.selectedText())
+		else:
 			response = QtGui.QInputDialog.getText(self, 'Find', 'Find:', QtGui.QLineEdit.Normal)
-			if response[1] and len(response[0]) > 0:
-				self.ui.editor.findFirst(response[0], False, False, False, False)
+		if response[1] and len(response[0]) > 0:
+			if not self.ui.editor.findFirst(response[0], False, False, False, False):
+				msg = QtGui.QMessageBox('Find', 'Cannot find "%s"' % response[0], QtGui.QMessageBox.Information, QtGui.QMessageBox.AcceptRole, QtGui.QMessageBox.NoButton, QtGui.QMessageBox.NoButton)
+				msg.exec_()
 	
 	def file_changed(self, path):
 		response = False
@@ -182,7 +198,9 @@ class fileWidget(QtGui.QWidget):
 		RELOAD = 'Reload File'
 		CANCEL = 'Cancel'
 		message = QtGui.QMessageBox(self)
-		message.setText('Open file have been changed !')
+		message.setIcon(QtGui.QMessageBox.Warning)
+		message.setText('The document has been modified or deleted.')
+		message.setInformativeText("Do you want to save your changes?")
 		message.setWindowTitle('PyDingo Text Editor')
 		message.setIcon(QtGui.QMessageBox.Warning)
 		message.addButton(SAVE, QtGui.QMessageBox.AcceptRole)
@@ -326,6 +344,7 @@ class fileWidget(QtGui.QWidget):
 			
 			message = QtGui.QMessageBox(self)
 			message.setText('Changes haven\'t been saved')
+			message.setInformativeText("Do you want to save your changes?")
 			message.setWindowTitle('PyDingo Text Editor')
 			message.setIcon(QtGui.QMessageBox.Question)
 			message.addButton(SAVE, QtGui.QMessageBox.AcceptRole)
