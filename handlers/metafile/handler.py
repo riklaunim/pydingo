@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import codecs
 from os import listdir, system
-from os.path import isfile, isdir, expanduser, join
+from os.path import isfile, isdir, join
 
-from PyQt4 import QtCore, QtGui, Qsci
+from PyQt4 import QtCore, QtGui
 
 from metafileWidget import Ui_MetafileWidget
 from utils import mime

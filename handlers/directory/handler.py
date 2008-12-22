@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 from os.path import isfile, isdir, join
+import shutil
 
 from PyQt4 import QtCore, QtGui
+
 from directoryWidget import Ui_DirectoryWidget
+from utils import gnome_meta, gio_meta
 
 from utils import mime
 
@@ -18,7 +21,7 @@ class FileManagerWidget(QtGui.QListWidget):
 		self.setResizeMode(QtGui.QListView.Adjust)
 		self.setGridSize(QtCore.QSize(80, 95))
 		self.setIconSize(QtCore.QSize(48, 48))
-		self.setDragDropMode(QtGui.QAbstractItemView.InternalMove)
+		self.setDragDropMode(QtGui.QAbstractItemView.DragDrop)
 		self.setSelectionMode(QtGui.QAbstractItemView.ContiguousSelection)
 		self.setWordWrap(True)
 		self.setWrapping(True)
@@ -27,23 +30,111 @@ class FileManagerWidget(QtGui.QListWidget):
 		
 		QtCore.QMetaObject.connectSlotsByName(self)
 	
+	def contextMenuEvent(self, event):
+		"""
+		Handle context menu for items and for "blank space"
+		* for item display suggested apps and some default actions
+		* for "blank space" display default actions for current directory like mkdir
+		"""
+		print 'menu'
+		item = self.itemAt(event.x(), event.y())
+		# context menu for items
+		if item:
+			currentDir = unicode(self.parent.ui.url.text())
+			url = join(currentDir, unicode(item.text()))
+			meta = gnome_meta.get_meta_info(url)
+			
+			menu = QtGui.QMenu(self)
+			# some default actions
+			menu.addAction('Open in new tab')
+			
+			if meta and len(meta) > 1 and meta['default_app']:
+				print 'GNOME'
+				menu.addSeparator()
+				menu.addAction(meta['default_app'][1].decode('utf-8'))
+				if meta['other_apps'] and len(meta['other_apps']) > 1:
+					for application in meta['other_apps']:
+						menu.addAction(application[1].decode('utf-8'))
+			else:
+				meta = gio_meta.get_meta_info(url)
+				if len(meta) > 0:
+					print 'GIO'
+					menu.addSeparator()
+					for application in meta:
+						menu.addAction(application['name'].decode('utf-8'))
+				else:
+					print 'BD'
+			menu.exec_(event.globalPos())
+	
+
 	def mouseReleaseEvent(self, event):
 		"""
 		Handle the event.
 		for left click-release - go to the file/directory
 		"""
-		button = event.button()
-		item = self.itemAt(event.x(), event.y())
-		if item:
-			self.setCurrentItem(item)
-			if button == 1:
-				self.item_clicked()
+		items = self.selectedItems()
+		if len(items) < 2:
+			button = event.button()
+			item = self.itemAt(event.x(), event.y())
+			if item:
+				self.setCurrentItem(item)
+				if button == 1:
+					self.item_clicked()
 	
+
 	def dropEvent(self, event):
+		"""
+		Handle drag and droping files/folders on other folders
+		to copy or move them to that folder
+		"""
 		print 'Drop'
-		print event
-		print self.dropIndicatorPosition()
-		print
+		itemAt = self.itemAt(event.pos())
+		currentDir = unicode(self.parent.ui.url.text())
+		dst = join(currentDir, unicode(itemAt.text()))
+		if itemAt and isdir(dst):
+			items = self.selectedItems()
+			if len(items) > 0:
+				MOVE = 'Move'
+				COPY = 'Copy'
+				CANCEL = 'Cancel'
+				itms = ''
+				for i in items:
+					itms += '- %s\n' % i.text()
+				
+				message = QtGui.QMessageBox(self)
+				message.setText('What to do with selected items?')
+				message.setWindowTitle('PyDingo File Manager')
+				message.setIcon(QtGui.QMessageBox.Question)
+				message.addButton(MOVE, QtGui.QMessageBox.AcceptRole)
+				message.addButton(COPY, QtGui.QMessageBox.AcceptRole)
+				message.addButton(CANCEL, QtGui.QMessageBox.RejectRole)
+				message.setDetailedText(itms)
+				message.exec_()
+				response = message.clickedButton().text()
+				
+				if response == MOVE:
+					for i in items:
+						src = join(currentDir, unicode(i.text()))
+						if isdir(src):
+							# If we move/copy a dir the destination must have it's name at the end
+							dst = join(currentDir, unicode(itemAt.text()), unicode(i.text()))
+						else:
+							dst = join(currentDir, unicode(itemAt.text()))
+						shutil.move(src, dst)
+							
+					self.parent.reload_items()
+				if response == COPY:
+					for i in items:
+						src = join(currentDir, unicode(i.text()))
+						if isfile(src):
+							dst = join(currentDir, unicode(itemAt.text()))
+							shutil.copy(src, dst)
+						else:
+							# If we move/copy a dir the destination must have it's name at the end
+							dst = join(currentDir, unicode(itemAt.text()), unicode(i.text()))
+							shutil.copytree(src, dst)
+				
+	
 	#def mousePressEvent(self, event):
 		#"""
 		#Handle the event.
@@ -113,10 +204,12 @@ class directoryWidget(QtGui.QWidget):
 		qdirs = qdir.entryList()
 		for d in qdirs:
 			itm = QtGui.QListWidgetItem(d)
+			itm.setToolTip(u'<b>Filename</b>: %s' % d)
 			if isdir(unicode(url)+u'/'+unicode(d)):
 				q = QtCore.QDir(unicode(url)+u'/'+unicode(d) + u'/.')
 				if q.isReadable():
 					itm.setIcon(QtGui.QIcon('media/mime_icons/folder_blue.png'))
+					itm.setFlags(QtCore.Qt.ItemIsDropEnabled | QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
 				else:
 					itm.setIcon(QtGui.QIcon('media/mime_icons/folder_locked.png'))
 			else:
