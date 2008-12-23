@@ -1,113 +1,14 @@
 # -*- coding: utf-8 -*-
-from os.path import isfile, isdir, join
-from sys import exc_info
-from traceback import format_exception
-import shutil
+from os.path import join
 
 from PyQt4 import QtCore, QtGui
 
 from directoryWidget import Ui_DirectoryWidget
+from model import FileManagerModel
+from view import FileManagerView
+
 from utils import gnome_meta, gio_meta
-
 from utils import mime
-
-class FileManagerModel(QtGui.QDirModel):
-	def __init__(self, parent=None):
-		"""
-		Custom QDirModel handling Drag & Drop
-		"""
-		self.parent = parent
-		super(FileManagerModel, self).__init__(parent)
-	
-	def flags(self, index):
-		"""
-		Enable drops of elements on folders
-		"""
-		if index.isValid() and self.isDir(index):
-			return QtCore.Qt.ItemIsDropEnabled | QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsDragEnabled
-		else:
-			return QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsDragEnabled
-	
-	def dropMimeData(self, data, action, row, column, parent):
-		"""
-		Dropping elements on folders
-		"""
-		currentDir = unicode(self.parent.ui.url.text())
-		dst = join(currentDir, unicode(parent.data().toString()))
-		items = data.urls()
-		if len(items) > 0 and isdir(dst):
-			MOVE = 'Move'
-			COPY = 'Copy'
-			CANCEL = 'Cancel'
-			itms = ''
-			for i in items:
-				itms += '- %s\n' % i.toLocalFile()
-			
-			message = QtGui.QMessageBox(self.parent)
-			message.setText('What to do with selected items?')
-			message.setWindowTitle('PyDingo File Manager')
-			message.setIcon(QtGui.QMessageBox.Question)
-			message.addButton(MOVE, QtGui.QMessageBox.AcceptRole)
-			message.addButton(COPY, QtGui.QMessageBox.AcceptRole)
-			message.addButton(CANCEL, QtGui.QMessageBox.RejectRole)
-			message.setDetailedText(itms)
-			message.exec_()
-			response = message.clickedButton().text()
-			
-			if response == MOVE:
-				for i in items:
-					src = unicode(i.toLocalFile())
-					if isdir(src):
-						# If we move/copy a dir the destination must have it's name at the end
-						qdir = QtCore.QDir(src)
-						dst = join(dst, unicode(qdir.dirName()))
-					else:
-						dst = join(currentDir, unicode(parent.data().toString()))
-					
-					try:
-						shutil.move(src, dst)
-					except:
-						exc = exc_info()
-						exc = format_exception(exc[0], exc[1], exc[2])
-						msg = QtGui.QMessageBox('Error when moving items', '<b>An error occured when moving files/folders</b>:<br>%s' % unicode(exc[-1]), QtGui.QMessageBox.Critical, QtGui.QMessageBox.AcceptRole, QtGui.QMessageBox.NoButton, QtGui.QMessageBox.NoButton)
-						exc = ''.join(exc)
-						msg.setDetailedText(unicode(exc))
-						msg.exec_()
-						return False
-				self.parent.reload_items()
-			
-			if response == COPY:
-				for i in items:
-					src = unicode(i.toLocalFile())
-					if isfile(src):
-						dst = join(currentDir, unicode(parent.data().toString()))
-						try:
-							shutil.copy(src, dst)
-						except:
-							exc = exc_info()
-							exc = format_exception(exc[0], exc[1], exc[2])
-							msg = QtGui.QMessageBox('Error when copying files', '<b>An error occured when copying files</b>:<br>%s' % unicode(exc[-1]), QtGui.QMessageBox.Critical, QtGui.QMessageBox.AcceptRole, QtGui.QMessageBox.NoButton, QtGui.QMessageBox.NoButton)
-							exc = ''.join(exc)
-							msg.setDetailedText(unicode(exc))
-							msg.exec_()
-							return False
-					else:
-						# If we move/copy a dir the destination must have it's name at the end
-						qdir = QtCore.QDir(src)
-						dst = join(dst, unicode(qdir.dirName()))
-						try:
-							shutil.copytree(src, dst)
-						except:
-							exc = exc_info()
-							exc = format_exception(exc[0], exc[1], exc[2])
-							msg = QtGui.QMessageBox('Error when copying a folder', '<b>An error occured when copying a folder</b>:<br>%s' % unicode(exc[-1]), QtGui.QMessageBox.Critical, QtGui.QMessageBox.AcceptRole, QtGui.QMessageBox.NoButton, QtGui.QMessageBox.NoButton)
-							exc = ''.join(exc)
-							msg.setDetailedText(unicode(exc))
-							msg.exec_()
-							return False
-			return True
-		return False
-
 
 class directoryWidget(QtGui.QWidget):
 	def __init__(self, parent=None, url=False, mainWindow=False, newTab=False):
@@ -119,6 +20,9 @@ class directoryWidget(QtGui.QWidget):
 		self.url = url
 		# set the lineEdit-URL to be as high as buttons
 		self.ui.url.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.Preferred)
+		
+		self.ui.listView = FileManagerView(self)
+		self.layout().addWidget(self.ui.listView)
 		
 		# item list settings
 		self.ui.listView.setResizeMode(QtGui.QListView.Adjust)
@@ -182,9 +86,15 @@ class directoryWidget(QtGui.QWidget):
 		QtCore.QMetaObject.connectSlotsByName(self)
 	
 	def reload_items(self):
+		"""
+		The reload button slot
+		"""
 		directoryWidget(parent=self.parent, url=self.url, mainWindow=self.mainWindow, newTab=False)
 	
 	def context_menu(self, points):
+		"""
+		Item context menu (right click menu)
+		"""
 		print 'Menu'
 		item = self.ui.listView.indexAt(points)
 		if item:
@@ -217,7 +127,9 @@ class directoryWidget(QtGui.QWidget):
 		
 	
 	def activated(self, index):
-		print 'Item Activated'
+		"""
+		Handle clicking on files and folders
+		"""
 		if index.isValid():
 			url = join(unicode(self.url), unicode(index.data().toString()))
 			self.mainWindow.url_handler(url=url)

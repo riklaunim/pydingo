@@ -41,6 +41,7 @@ class Dingo(QtGui.QMainWindow):
 		self.tab.ui.back.setEnabled(False)
 		self.tab.ui.next.setEnabled(False)
 		mainLayout.addWidget(self.main)
+		self.set_shortcuts()
 	
 	def close_tab(self):
 		"""
@@ -62,6 +63,7 @@ class Dingo(QtGui.QMainWindow):
 			self.future[self.main.currentIndex()] = []
 			self.tab.ui.back.setEnabled(False)
 			self.tab.ui.next.setEnabled(False)
+			self.set_shortcuts()
 	
 	def new_tab(self):
 		"""
@@ -73,6 +75,7 @@ class Dingo(QtGui.QMainWindow):
 		self.future[self.main.currentIndex()] = []
 		self.tab.ui.back.setEnabled(False)
 		self.tab.ui.next.setEnabled(False)
+		self.set_shortcuts()
 		
 	
 	def up_clicked(self):
@@ -216,7 +219,29 @@ class Dingo(QtGui.QMainWindow):
 		else:
 			self.future[index] = []
 			self.tab.ui.next.setEnabled(False)
-
+		
+		self.set_shortcuts()
+		
+	def set_shortcuts(self):
+		"""
+		Set keyboard shortcuts for core buttons
+		"""
+		self.tab = self.main.currentWidget()
+		
+		close = QtGui.QKeySequence(QtGui.QKeySequence.Close)
+		self.tab.ui.close.setShortcut(close)
+		
+		ntab = QtGui.QKeySequence(QtGui.QKeySequence.AddTab)
+		self.tab.ui.newTab.setShortcut(ntab)
+		
+		back = QtGui.QKeySequence(QtGui.QKeySequence.Back)
+		self.tab.ui.back.setShortcut(back)
+		
+		next = QtGui.QKeySequence(QtGui.QKeySequence.Forward)
+		self.tab.ui.next.setShortcut(next)
+		
+		up = QtGui.QKeySequence(QtGui.QKeySequence.MoveToPreviousPage)
+		self.tab.ui.up.setShortcut(up)
 
 if __name__ == "__main__":
 	app = QtGui.QApplication(sys.argv)
