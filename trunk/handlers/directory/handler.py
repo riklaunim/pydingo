@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from os.path import isfile, isdir, join
+from sys import exc_info
+from traceback import format_exception
 import shutil
 
 from PyQt4 import QtCore, QtGui
@@ -65,7 +67,12 @@ class FileManagerModel(QtGui.QDirModel):
 					try:
 						shutil.move(src, dst)
 					except:
-						print 'error'
+						exc = exc_info()
+						exc = format_exception(exc[0], exc[1], exc[2])
+						msg = QtGui.QMessageBox('Error when moving items', '<b>An error occured when moving files/folders</b>:<br>%s' % unicode(exc[-1]), QtGui.QMessageBox.Critical, QtGui.QMessageBox.AcceptRole, QtGui.QMessageBox.NoButton, QtGui.QMessageBox.NoButton)
+						exc = ''.join(exc)
+						msg.setDetailedText(unicode(exc))
+						msg.exec_()
 						return False
 				self.parent.reload_items()
 			
@@ -77,7 +84,12 @@ class FileManagerModel(QtGui.QDirModel):
 						try:
 							shutil.copy(src, dst)
 						except:
-							print 'error'
+							exc = exc_info()
+							exc = format_exception(exc[0], exc[1], exc[2])
+							msg = QtGui.QMessageBox('Error when copying files', '<b>An error occured when copying files</b>:<br>%s' % unicode(exc[-1]), QtGui.QMessageBox.Critical, QtGui.QMessageBox.AcceptRole, QtGui.QMessageBox.NoButton, QtGui.QMessageBox.NoButton)
+							exc = ''.join(exc)
+							msg.setDetailedText(unicode(exc))
+							msg.exec_()
 							return False
 					else:
 						# If we move/copy a dir the destination must have it's name at the end
@@ -86,7 +98,12 @@ class FileManagerModel(QtGui.QDirModel):
 						try:
 							shutil.copytree(src, dst)
 						except:
-							print 'error'
+							exc = exc_info()
+							exc = format_exception(exc[0], exc[1], exc[2])
+							msg = QtGui.QMessageBox('Error when copying a folder', '<b>An error occured when copying a folder</b>:<br>%s' % unicode(exc[-1]), QtGui.QMessageBox.Critical, QtGui.QMessageBox.AcceptRole, QtGui.QMessageBox.NoButton, QtGui.QMessageBox.NoButton)
+							exc = ''.join(exc)
+							msg.setDetailedText(unicode(exc))
+							msg.exec_()
 							return False
 			return True
 		return False
