@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'directoryWidget.ui'
 #
-# Created: Tue Dec 23 02:08:15 2008
+# Created: Tue Dec 23 20:17:38 2008
 #      by: PyQt4 UI code generator 4.4.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -77,9 +77,6 @@ class Ui_DirectoryWidget(object):
         self.close.setObjectName("close")
         self.horizontalLayout.addWidget(self.close)
         self.verticalLayout.addLayout(self.horizontalLayout)
-        self.listView = QtGui.QListView(DirectoryWidget)
-        self.listView.setObjectName("listView")
-        self.verticalLayout.addWidget(self.listView)
 
         self.retranslateUi(DirectoryWidget)
         QtCore.QMetaObject.connectSlotsByName(DirectoryWidget)
