@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'directoryWidget.ui'
 #
-# Created: Tue Dec 16 12:14:06 2008
+# Created: Tue Dec 23 02:08:15 2008
 #      by: PyQt4 UI code generator 4.4.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -13,9 +13,7 @@ class Ui_DirectoryWidget(object):
     def setupUi(self, DirectoryWidget):
         DirectoryWidget.setObjectName("DirectoryWidget")
         DirectoryWidget.resize(700, 426)
-        self.verticalLayout_2 = QtGui.QVBoxLayout(DirectoryWidget)
-        self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.verticalLayout = QtGui.QVBoxLayout()
+        self.verticalLayout = QtGui.QVBoxLayout(DirectoryWidget)
         self.verticalLayout.setObjectName("verticalLayout")
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
@@ -79,7 +77,9 @@ class Ui_DirectoryWidget(object):
         self.close.setObjectName("close")
         self.horizontalLayout.addWidget(self.close)
         self.verticalLayout.addLayout(self.horizontalLayout)
-        self.verticalLayout_2.addLayout(self.verticalLayout)
+        self.listView = QtGui.QListView(DirectoryWidget)
+        self.listView.setObjectName("listView")
+        self.verticalLayout.addWidget(self.listView)
 
         self.retranslateUi(DirectoryWidget)
         QtCore.QMetaObject.connectSlotsByName(DirectoryWidget)
