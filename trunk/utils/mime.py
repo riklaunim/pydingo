@@ -1,10 +1,10 @@
 import mimetypes
+from os.path import join, isfile, isdir
+from os import listdir
 
-try:
-	import xdg.Mime
-except:
-	xdg = False
-	print '*Optional dependency missing* No pyxdg package. Please install it for unix/linux for better mime handling'
+import xdg.Mime
+import xdg.IconTheme
+import xdg.DesktopEntry
 
 def get_mime(file):
 	"""
@@ -42,4 +42,38 @@ def is_plaintext(mimetype):
 	elif mimetype.startswith('text'):
 		return True
 	
+	return False
+
+def get_icon(desktopFile):
+	"""
+	Try to get icon path for a given .desktop file
+	"""
+	desktopFile = desktopFile.split('-')[-1]
+	desktopDirs = listdir('/usr/share/applications/')
+	dst = [join('/usr/share/applications', desktopFile)]
+	for d in desktopDirs:
+		path = join('/usr/share/applications/', d)
+		if isdir(path):
+			dst.append(join(path, desktopFile))
+	
+	for desktopFile in dst:
+		if isfile(desktopFile):
+			de = xdg.DesktopEntry.DesktopEntry(filename=desktopFile)
+			icon = xdg.IconTheme.getIconPath(de.getIcon())
+			if icon:
+				return icon
+	return False
+
+def get_icon_by_exec(executable):
+	"""
+	Try to get icon path for a given application executable
+	"""
+	icon = xdg.IconTheme.getIconPath(executable)
+	if icon:
+		return icon
+	else:
+		executable = executable.split('-')[0]
+		icon = xdg.IconTheme.getIconPath(executable)
+		if icon:
+			return icon
 	return False
