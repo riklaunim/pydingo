@@ -99,6 +99,9 @@ class metafileWidget(QtGui.QWidget):
 			if meta['default_app'] and len(meta['default_app']) > 0:
 				app = AppButton(appDB = self.appDB)
 				app.setText(meta['default_app'][1].decode('utf-8'))
+				i = mime.get_icon(meta['default_app'][0])
+				if i:
+					app.setIcon(QtGui.QIcon(i))
 				
 				app_name = meta['default_app'][1]
 				#app_desktop = meta['default_app'][0]
@@ -110,6 +113,9 @@ class metafileWidget(QtGui.QWidget):
 				for application in meta['other_apps']:
 					app = AppButton(appDB = self.appDB)
 					app.setText(application[1].decode('utf-8'))
+					i = mime.get_icon(application[0])
+					if i:
+						app.setIcon(QtGui.QIcon(i))
 					
 					self.appDB[application[1].decode('utf-8')] = application[2]
 					#app_desktop = application[0]
@@ -131,6 +137,10 @@ class metafileWidget(QtGui.QWidget):
 			for application in meta:
 				app = AppButton(appDB = self.appDB)
 				app.setText(application['name'].decode('utf-8'))
+				app.setToolTip(application['description'].decode('utf-8'))
+				i = mime.get_icon_by_exec(application['exec'])
+				if i:
+					app.setIcon(QtGui.QIcon(i))
 				
 				self.appDB[application['name'].decode('utf-8')] = application['exec']
 				gioLayout.addWidget(app)

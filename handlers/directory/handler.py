@@ -109,16 +109,28 @@ class directoryWidget(QtGui.QWidget):
 			if meta and len(meta) > 1 and meta['default_app']:
 				print 'GNOME'
 				menu.addSeparator()
-				menu.addAction(meta['default_app'][1].decode('utf-8'))
+				
+				i = mime.get_icon(meta['default_app'][0])
+				if i:
+					i = QtGui.QIcon(i)
+					menu.addAction(i, meta['default_app'][1].decode('utf-8'))
+				else:
+					menu.addAction(meta['default_app'][1].decode('utf-8'))
 				if meta['other_apps'] and len(meta['other_apps']) > 1:
 					for application in meta['other_apps']:
-						menu.addAction(application[1].decode('utf-8'))
+						i =  mime.get_icon(application[0])
+						if i:
+							i = QtGui.QIcon(i)
+							menu.addAction(i, application[1].decode('utf-8'))
+						else:
+							menu.addAction(application[1].decode('utf-8'))
 			else:
 				meta = gio_meta.get_meta_info(url)
 				if len(meta) > 0:
 					print 'GIO'
 					menu.addSeparator()
 					for application in meta:
+						
 						menu.addAction(application['name'].decode('utf-8'))
 				else:
 					print 'BD'

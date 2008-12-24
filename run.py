@@ -16,6 +16,8 @@ class Dingo(QtGui.QMainWindow):
 		# setup for URL history
 		self.history = {}
 		self.future = {}
+		# copy, cut container
+		self.filemanagerContainer = []
 		
 		# Future - docking widgets from tabs
 		self.setDockNestingEnabled(True)
@@ -242,6 +244,9 @@ class Dingo(QtGui.QMainWindow):
 		
 		up = QtGui.QKeySequence(QtGui.QKeySequence.MoveToPreviousPage)
 		self.tab.ui.up.setShortcut(up)
+		
+		home = QtGui.QKeySequence(QtGui.QKeySequence.MoveToStartOfLine)
+		self.tab.ui.home.setShortcut(home)
 
 if __name__ == "__main__":
 	app = QtGui.QApplication(sys.argv)

@@ -17,17 +17,34 @@ class FileManagerView(QtGui.QListView):
 		"""
 		Handle Copy, Paste, Cut, Delete from keyboard shortcuts
 		"""
-		if event.matches(QtGui.QKeySequence.Copy):
-			event.accept()
-			print 'copy'
-		elif event.matches(QtGui.QKeySequence.Cut):
-			event.accept()
-			print 'cut'
-		elif event.matches(QtGui.QKeySequence.Paste):
-			event.accept()
-			print 'paste'
-		elif event.matches(QtGui.QKeySequence.Delete):
-			event.accept()
-			print 'delete'
+		items = self.selectedIndexes()
+		container = self.parent.mainWindow.filemanagerContainer
+		if len(items) > 0:
+			"""
+			Copy, Cut - save the list of items to a global container, Delete
+			"""
+			if event.matches(QtGui.QKeySequence.Copy):
+				event.accept()
+				# save items to the container
+				self.parent.mainWindow.filemanagerContainer = items
+			elif event.matches(QtGui.QKeySequence.Cut):
+				event.accept()
+				# save items to the container
+				self.parent.mainWindow.filemanagerContainer = items
+			elif event.matches(QtGui.QKeySequence.Delete):
+				event.accept()
+				print 'delete'
+			else:
+				event.ignore()
+		elif len(container) > 0:
+			"""
+			Paste action - copy items from global container to current directory
+			"""
+			if event.matches(QtGui.QKeySequence.Paste):
+				event.accept()
+				print 'paste'
+			else:
+				event.ignore()
 		else:
 			event.ignore()
+		print self.parent.mainWindow.filemanagerContainer
