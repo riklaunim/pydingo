@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# Cross platform MIME detection library
+
 import mimetypes
 from os.path import join, isfile, isdir
 from os import listdir

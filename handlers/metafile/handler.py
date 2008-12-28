@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# Base of metawidget - display info, suggested apps, preview etc of a given file (usualy binary file)
+
 import codecs
 from os import listdir, system
 from os.path import isfile, isdir, join

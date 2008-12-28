@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# Suggested applications for a file on a Linux/Unix OS using pygobject/GIO
+
 try:
 	import gio
 except:

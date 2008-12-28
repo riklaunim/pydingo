@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# Extraction of file metadata using cross platform Hachoir library
+
 try:
 	from hachoir_core.error import HachoirError
 	from hachoir_core.cmd_line import unicodeFilename

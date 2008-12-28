@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# Custom QListView for the filemanager
+
 from sys import exc_info
 from traceback import format_exception
 from os.path import isfile, isdir, join
@@ -17,13 +19,16 @@ class FileManagerView(QtGui.QListView):
 		"""
 		Handle Copy, Paste, Cut, Delete from keyboard shortcuts
 		"""
+		# modelindexes of selected items
 		items = self.selectedIndexes()
+		# the list to which we save the items
 		container = self.parent.mainWindow.filemanagerContainer
 		if len(items) > 0:
 			"""
 			Copy, Cut - save the list of items to a global container, Delete
 			"""
 			itm = []
+			# we want nice paths to selected items, as modelindexes would be useless in another folder
 			for i in items:
 				itm.append(unicode(self.parent.model.filePath(i)))
 			
@@ -41,7 +46,7 @@ class FileManagerView(QtGui.QListView):
 				self.parent.mainWindow.filemanagerContainerType = 'MOVE'
 			elif event.matches(QtGui.QKeySequence.Delete):
 				event.accept()
-				print 'delete'
+				print 'delete-move-to-trash / NOT IMPLEMENTED'
 			else:
 				event.ignore()
 		if len(container) > 0:
@@ -51,8 +56,10 @@ class FileManagerView(QtGui.QListView):
 			if event.matches(QtGui.QKeySequence.Paste):
 				event.accept()
 				print 'paste'
+				# current folder is the destination folder
 				parent = self.parent.ui.listView.rootIndex()
 				dst = unicode(self.parent.model.filePath(parent))
+				
 				if self.parent.mainWindow.filemanagerContainerType == 'MOVE':
 					for src in container:
 						if isdir(src):
@@ -100,9 +107,7 @@ class FileManagerView(QtGui.QListView):
 								msg.setDetailedText(unicode(exc))
 								msg.exec_()
 					self.parent.reload_items()
-				
 			else:
 				event.ignore()
 		else:
 			event.ignore()
-		print self.parent.mainWindow.filemanagerContainer
