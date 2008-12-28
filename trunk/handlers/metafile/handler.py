@@ -46,6 +46,7 @@ class metafileWidget(QtGui.QWidget):
 		
 		if not url:
 			url = self.ui.url.text()
+		url = unicode(url)
 		
 		# apps for a file DB
 		self.appDB = {'URL': url}
