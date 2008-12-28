@@ -2,6 +2,7 @@
 # File manager widget based on QDirModel and QListView
 
 from os.path import join
+from os import system
 
 from PyQt4 import QtCore, QtGui
 
@@ -11,6 +12,25 @@ from view import FileManagerView
 
 from utils import gnome_meta, gio_meta
 from utils import mime
+
+class ContextMenu(QtGui.QMenu):
+	"""
+	Right-click context menu for a given file
+	"""
+	def __init__(self, parent=None, appDB=False):
+		super(ContextMenu, self).__init__(parent)
+		self.appDB = appDB
+		self.parent = parent
+		
+		QtCore.QObject.connect(self,QtCore.SIGNAL("triggered(QAction *)"), self.action_triggered)
+		QtCore.QMetaObject.connectSlotsByName(self)
+	
+	def action_triggered(self, action):
+		key = unicode(action.text())
+		if self.appDB.has_key(key):
+			system('%s %s' % (self.appDB[key], self.appDB['URL']))
+		elif key == 'Open in new tab':
+			self.parent.mainWindow.url_handler(url=self.appDB['URL'], newTab=True)
 
 class directoryWidget(QtGui.QWidget):
 	def __init__(self, parent=None, url=False, mainWindow=False, newTab=False):
@@ -98,13 +118,15 @@ class directoryWidget(QtGui.QWidget):
 		Item context menu (right click menu)
 		"""
 		print 'Menu'
+		
 		item = self.ui.listView.indexAt(points)
 		if item:
+			self.appDB = {'URL': self.model.filePath(item)}
 			currentDir = unicode(self.ui.url.text())
 			url = join(currentDir, unicode(item.data().toString()))
 			meta = gnome_meta.get_meta_info(url)
 			
-			menu = QtGui.QMenu(self)
+			menu = ContextMenu(self, appDB=self.appDB)
 			# some default actions
 			menu.addAction('Open in new tab')
 			
@@ -118,6 +140,9 @@ class directoryWidget(QtGui.QWidget):
 					menu.addAction(i, meta['default_app'][1].decode('utf-8'))
 				else:
 					menu.addAction(meta['default_app'][1].decode('utf-8'))
+				
+				self.appDB[meta['default_app'][1].decode('utf-8')] = meta['default_app'][2]
+				
 				if meta['other_apps'] and len(meta['other_apps']) > 1:
 					for application in meta['other_apps']:
 						i =  mime.get_icon(application[0])
@@ -126,14 +151,15 @@ class directoryWidget(QtGui.QWidget):
 							menu.addAction(i, application[1].decode('utf-8'))
 						else:
 							menu.addAction(application[1].decode('utf-8'))
+						self.appDB[application[1].decode('utf-8')] = application[2]
 			else:
 				meta = gio_meta.get_meta_info(url)
 				if len(meta) > 0:
 					print 'GIO'
 					menu.addSeparator()
 					for application in meta:
-						
 						menu.addAction(application['name'].decode('utf-8'))
+						self.appDB[application['name'].decode('utf-8')] = application['exec']
 				else:
 					print 'BD'
 			pos = self.ui.listView.mapToGlobal(points)
