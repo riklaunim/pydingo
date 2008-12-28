@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# Custom QDirModel with reimplemented few methods
+
 from sys import exc_info
 from traceback import format_exception
 from os.path import isfile, isdir, join

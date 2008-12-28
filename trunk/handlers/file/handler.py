@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# Text editor based on QScintilla
+
 import codecs
 from os import listdir
 from os.path import isfile, isdir, expanduser, join

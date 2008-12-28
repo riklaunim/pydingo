@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# File manager widget based on QDirModel and QListView
+
 from os.path import join
 
 from PyQt4 import QtCore, QtGui

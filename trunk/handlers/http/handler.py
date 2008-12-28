@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Web browser based on qt-webkit
 
 from PyQt4 import QtCore, QtGui
 from httpWidget import Ui_HttpWidget

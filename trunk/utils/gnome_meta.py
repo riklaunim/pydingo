@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# Extract MIME and suggested applications for a file on a Linux/Unix OS using gnome-vfs-python
+
 try:
 	import gnomevfs
 except:
