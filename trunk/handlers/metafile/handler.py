@@ -137,7 +137,8 @@ class metafileWidget(QtGui.QWidget):
 			for application in meta:
 				app = AppButton(appDB = self.appDB)
 				app.setText(application['name'].decode('utf-8'))
-				app.setToolTip(application['description'].decode('utf-8'))
+				if application['description']:
+					app.setToolTip(application['description'].decode('utf-8'))
 				i = mime.get_icon_by_exec(application['exec'])
 				if i:
 					app.setIcon(QtGui.QIcon(i))

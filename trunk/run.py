@@ -18,6 +18,7 @@ class Dingo(QtGui.QMainWindow):
 		self.future = {}
 		# copy, cut container
 		self.filemanagerContainer = []
+		self.filemanagerContainerType = False
 		
 		# Future - docking widgets from tabs
 		self.setDockNestingEnabled(True)
