@@ -154,7 +154,7 @@ class directoryWidget(QtGui.QWidget):
 						self.appDB[application[1].decode('utf-8')] = application[2]
 			else:
 				meta = gio_meta.get_meta_info(url)
-				if len(meta) > 0:
+				if meta and len(meta) > 0:
 					print 'GIO'
 					menu.addSeparator()
 					for application in meta:

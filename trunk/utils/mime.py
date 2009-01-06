@@ -13,7 +13,7 @@ def get_mime(file):
 	"""
 	Return mime type of a file
 	"""
-	# xdg returns text/plain for everything on Windows :)
+	# xdg returns text/plain for everything on Windows, and application/executable on Mac :)
 	if xdg and unicode(xdg.Mime.get_type('file.sql')) == u'text/x-sql':
 		file = unicode(file)
 		#try pyxdg linux/unix backed
@@ -22,7 +22,7 @@ def get_mime(file):
 		except:
 			mime = False
 	else:
-		# fallback to python mimetypes module (on Windows)
+		# fallback to python mimetypes module (on Windows/Mac)
 		mimetypes.init()
 		ext = u'.%s' % file.split('.')[-1]
 		try:
