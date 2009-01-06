@@ -250,9 +250,6 @@ class Dingo(QtGui.QMainWindow):
 		next = QtGui.QKeySequence(QtGui.QKeySequence.Forward)
 		self.tab.ui.next.setShortcut(next)
 		
-		up = QtGui.QKeySequence(QtGui.QKeySequence.MoveToPreviousPage)
-		self.tab.ui.up.setShortcut(up)
-		
 		home = QtGui.QKeySequence(QtGui.QKeySequence.MoveToStartOfLine)
 		self.tab.ui.home.setShortcut(home)
 
