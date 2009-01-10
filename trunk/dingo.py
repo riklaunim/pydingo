@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'dingo.ui'
 #
-# Created: Sun Nov 23 18:01:34 2008
-#      by: PyQt4 UI code generator 4.4.3
+# Created: Sat Jan 10 19:35:48 2009
+#      by: PyQt4 UI code generator 4.4.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -13,6 +13,9 @@ class Ui_Dingo(object):
     def setupUi(self, Dingo):
         Dingo.setObjectName("Dingo")
         Dingo.resize(573, 549)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/ui/pydingo.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        Dingo.setWindowIcon(icon)
         self.centralwidget = QtGui.QWidget(Dingo)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtGui.QVBoxLayout(self.centralwidget)
@@ -53,3 +56,4 @@ class Ui_Dingo(object):
     def retranslateUi(self, Dingo):
         Dingo.setWindowTitle(QtGui.QApplication.translate("Dingo", "Dingo", None, QtGui.QApplication.UnicodeUTF8))
 
+import resources_rc

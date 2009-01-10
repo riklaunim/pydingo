@@ -25,7 +25,7 @@ class httpWidget(QtGui.QWidget):
 		self.ui.url.setText(url)
 		
 		# name the tab as current folder name
-		tabName = url
+		tabName = url[0:20]
 		
 		# load page
 		self.ui.webView.setUrl(QtCore.QUrl(url))
@@ -145,6 +145,7 @@ class httpWidget(QtGui.QWidget):
 		"""
 		if load == 100:
 			self.ui.stop.setEnabled(False)
+			#print self.ui.webView.page().mainFrame().childFrames()
 		else:
 			self.ui.stop.setEnabled(True)
 	

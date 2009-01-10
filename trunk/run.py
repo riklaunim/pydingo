@@ -6,6 +6,7 @@ from PyQt4 import QtCore, QtGui, QtWebKit
 
 from dingo import Ui_Dingo
 from utils import mime
+import resources_rc
 
 class Dingo(QtGui.QMainWindow):
 	def __init__(self, parent=None):
