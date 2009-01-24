@@ -13,6 +13,7 @@ class Dingo(QtGui.QMainWindow):
 		QtGui.QWidget.__init__(self, parent)
 		self.ui = Ui_Dingo()
 		self.ui.setupUi(self)
+		self.setWindowState(QtCore.Qt.WindowMaximized)
 		
 		# setup for URL history
 		self.history = {}

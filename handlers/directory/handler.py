@@ -7,8 +7,7 @@ from os import system
 from PyQt4 import QtCore, QtGui
 
 from directoryWidget import Ui_DirectoryWidget
-from model import FileManagerModel
-from view import FileManagerView
+from view import *
 
 from utils import gnome_meta, gio_meta
 from utils import mime
@@ -43,28 +42,6 @@ class directoryWidget(QtGui.QWidget):
 		# set the lineEdit-URL to be as high as buttons
 		self.ui.url.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.Preferred)
 		
-		self.ui.listView = FileManagerView(self)
-		self.layout().addWidget(self.ui.listView)
-		
-		# item list settings
-		self.ui.listView.setResizeMode(QtGui.QListView.Adjust)
-		self.ui.listView.setWordWrap(True)
-		self.ui.listView.setWrapping(True)
-		self.ui.listView.setIconSize(QtCore.QSize(48, 48))
-		self.ui.listView.setDragEnabled(True)
-		self.ui.listView.setAcceptDrops(True)
-		self.ui.listView.setDropIndicatorShown(True)
-		self.ui.listView.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-		self.ui.listView.setDragDropMode(QtGui.QAbstractItemView.DragDrop)
-		self.ui.listView.setSelectionMode(QtGui.QAbstractItemView.ContiguousSelection)
-		
-		# QDirModel settings
-		self.model = FileManagerModel(self)
-		self.model.setFilter(QtCore.QDir.AllEntries | QtCore.QDir.NoDotAndDotDot)
-		self.model.setSorting(QtCore.QDir.DirsFirst)
-		#self.model.setReadOnly(False)
-		self.ui.listView.setModel(self.model)
-		
 		# set the url
 		if not self.url:
 			self.url = self.ui.url.text()
@@ -75,8 +52,13 @@ class directoryWidget(QtGui.QWidget):
 			self.url = QtCore.QDir.homePath()
 		
 		self.ui.url.setText(self.url)
-		# set the URL for the model
-		self.ui.listView.setRootIndex(self.model.index(self.url))
+		
+		self.ui.listView = FileManagerListView(self)
+		#self.ui.listView = FileManagerTableView(self)
+		#self.ui.listView = FileManagerColumnView(self)
+		#self.ui.listView = FileManagerTreeView(self)
+		
+		self.layout().addWidget(self.ui.listView)
 		
 		# name the tab as current folder name
 		qdir = QtCore.QDir(self.url)
@@ -121,7 +103,7 @@ class directoryWidget(QtGui.QWidget):
 		
 		item = self.ui.listView.indexAt(points)
 		if item:
-			self.appDB = {'URL': self.model.filePath(item)}
+			self.appDB = {'URL': self.ui.listView.model.filePath(item)}
 			currentDir = unicode(self.ui.url.text())
 			url = join(currentDir, unicode(item.data().toString()))
 			meta = gnome_meta.get_meta_info(url)
