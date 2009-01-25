@@ -182,8 +182,10 @@ class Dingo(QtGui.QMainWindow):
 				from handlers.file import handler
 				self.tab = handler.fileWidget(url=url, mainWindow=self, mime=mimetype, newTab=newTab)
 			else:
-				from handlers.metafile import handler
-				self.tab = handler.metafileWidget(self.main, url=url, mainWindow=self, newTab=newTab)
+				#from handlers.metafile import handler
+				#self.tab = handler.metafileWidget(self.main, url=url, mainWindow=self, newTab=newTab)
+				q = QtGui.QDesktopServices()
+				q.openUrl(QtCore.QUrl(url))
 		elif unicode(url).startswith('http://') or unicode(url).startswith('www'):
 			if unicode(url).startswith('www'):
 				url = 'http://%s' % unicode(url)
@@ -198,6 +200,9 @@ class Dingo(QtGui.QMainWindow):
 			"""
 			routing = unicode(url)
 			print routing
+			#if isfile(routing):
+				#q = QtGui.QDesktopServices()
+				#q.openUrl(QtCore.QUrl(routing))
 			print 'nieznany'
 		
 		# URL history
