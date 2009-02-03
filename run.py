@@ -200,10 +200,9 @@ class Dingo(QtGui.QMainWindow):
 			"""
 			routing = unicode(url)
 			print routing
-			#if isfile(routing):
-				#q = QtGui.QDesktopServices()
-				#q.openUrl(QtCore.QUrl(routing))
-			print 'nieznany'
+			if isfile(routing):
+				q = QtGui.QDesktopServices()
+				q.openUrl(QtCore.QUrl.fromLocalFile(routing))
 		
 		# URL history
 		if self.history.has_key(index):
