@@ -31,21 +31,28 @@ class fileWidget(QtGui.QWidget):
 		if not url:
 			url = self.ui.url.text()
 		self.url = url
-		
-		# use filename for tab name
-		tabName = url.split('/')
-		tabName = tabName[-1]
-		
-		# set the URL
-		self.ui.url.setText(url)
-		
-		# get mime so code highlighting can be set
-		# set other QSCintilla settings
-		if mime:
-			mimetype = unicode(mime)
+		 
+		if not self.url:
+			# new file, does not exist
+			tabName = 'New File'
+			self.newFile = True
+			mimetype = False
 		else:
-			raise IOError, 'No mime for %s' % tabName
-		ext = url.split('.')[-1]
+			self.newFile = False
+			# use filename for tab name
+			tabName = url.split('/')
+			tabName = tabName[-1]
+			
+			# set the URL
+			self.ui.url.setText(url)
+			
+			# get mime so code highlighting can be set
+			# set other QSCintilla settings
+			if mime:
+				mimetype = unicode(mime)
+			else:
+				raise IOError, 'No mime for %s' % tabName
+			ext = url.split('.')[-1]
 		font = QtGui.QFont()
 		font.setFamily("Verdana")
 		font.setFixedPitch(True)
@@ -120,20 +127,21 @@ class fileWidget(QtGui.QWidget):
 				lexer = Qsci.QsciLexerYAML()
 				self.ui.editor.setLexer(lexer)
 		
-		"""
-		ToDo:
-			- Improve / FIX THIS
-		"""
-		try:
-			text = codecs.open(url,'rw','utf-8').read()
-		except:
-			text = open(url).read()
-
-		# load file text
-		self.ui.editor.setText(text)
-		# set file watcher:
-		self.watcher.addPath(self.url)
-		self.ui.editor.setModified(False)
+		if not self.newFile:
+			"""
+			ToDo:
+				- Improve / FIX THIS
+			"""
+			try:
+				text = codecs.open(url,'rw','utf-8').read()
+			except:
+				text = open(url).read()
+	
+			# load file text
+			self.ui.editor.setText(text)
+			# set file watcher:
+			self.watcher.addPath(self.url)
+			self.ui.editor.setModified(False)
 		
 		# set the tab
 		if newTab:
@@ -233,7 +241,8 @@ class fileWidget(QtGui.QWidget):
 		* enable save button
 		* check if undo/redo button can be activated and do it
 		"""
-		self.ui.save.setEnabled(True)
+		if not self.newFile:
+			self.ui.save.setEnabled(True)
 		
 		if self.ui.editor.isRedoAvailable():
 			self.ui.redo.setEnabled(True)
@@ -264,7 +273,8 @@ class fileWidget(QtGui.QWidget):
 			self.ui.undo.setEnabled(False)
 		
 		if self.ui.editor.isModified():
-			self.ui.save.setEnabled(True)
+			if not self.newFile:
+				self.ui.save.setEnabled(True)
 		else:
 			self.ui.save.setEnabled(False)
 	
@@ -287,28 +297,10 @@ class fileWidget(QtGui.QWidget):
 			self.ui.undo.setEnabled(False)
 		
 		if self.ui.editor.isModified():
-			self.ui.save.setEnabled(True)
+			if not self.newFile:
+				self.ui.save.setEnabled(True)
 		else:
 			self.ui.save.setEnabled(False)
-	
-	def file_save(self):
-		"""
-		save button clicked, save the changes
-		"""
-		# backup
-		backup = open(self.url, 'r').read()
-		handle = open('%s~' % self.url, 'w')
-		handle.write(backup)
-		handle.close()
-		
-		self.watcher.removePath(self.url)
-		text = self.ui.editor.text()
-		handle = open(self.url, 'w')
-		handle.write(text)
-		handle.close()
-		self.watcher.addPath(self.url)
-		self.ui.save.setEnabled(False)
-		self.ui.editor.setModified(False)
 	
 	def file_saveAs(self):
 		"""
@@ -325,7 +317,11 @@ class fileWidget(QtGui.QWidget):
 			
 			self.ui.save.setEnabled(False)
 			self.ui.url.setText(newfile)
-			self.watcher.addPath(newfile)
+			if not self.newFile:
+				self.watcher.addPath(newfile)
+			else:
+				self.mainWindow.url_handler(url=newfile)
+				
 			self.ui.editor.setModified(False)
 			
 			## new file, remove old and add the new one to the watcher
@@ -333,6 +329,27 @@ class fileWidget(QtGui.QWidget):
 				#self.watcher.removePath(self.filename)
 				#self.watcher.addPath(newfile)
 				#self.filename = newfile
+	
+	def file_save(self):
+		"""
+		save button clicked, save the changes
+		"""
+		# backup
+		if self.newFile:
+			return self.file_saveAs()
+		backup = open(self.url, 'r').read()
+		handle = open('%s~' % self.url, 'w')
+		handle.write(backup)
+		handle.close()
+		
+		self.watcher.removePath(self.url)
+		text = self.ui.editor.text()
+		handle = open(self.url, 'w')
+		handle.write(text)
+		handle.close()
+		self.watcher.addPath(self.url)
+		self.ui.save.setEnabled(False)
+		self.ui.editor.setModified(False)
 	
 	####################
 	def back(self):

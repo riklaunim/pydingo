@@ -47,7 +47,33 @@ class Dingo(QtGui.QMainWindow):
 		self.tab.ui.next.setEnabled(False)
 		mainLayout.addWidget(self.main)
 		self.set_shortcuts()
+		
+		# QMenuBar actions
+		QtCore.QObject.connect(self.ui.actionClose,QtCore.SIGNAL("triggered()"), self.action_close)
+		QtCore.QObject.connect(self.ui.actionFile_Manager,QtCore.SIGNAL("triggered()"), self.new_tab)
+		QtCore.QObject.connect(self.ui.actionWeb_Browser,QtCore.SIGNAL("triggered()"), self.new_browser)
+		QtCore.QObject.connect(self.ui.actionText_Editor,QtCore.SIGNAL("triggered()"), self.new_textEditor)
+		QtCore.QObject.connect(self.ui.actionAbout,QtCore.SIGNAL("triggered()"), self.about)
+		
+	def about(self):
+		"""
+		Show app info
+		"""
+		message = QtGui.QMessageBox(self)
+		message.setTextFormat(QtCore.Qt.RichText)
+		message.setText(u'<b>PyDingo File Manager 0.4 Alpha</b><br><br><b>Author</b>: Piotr "Riklaunim" Maliński<br><b>Mail</b>: <a href="mailto:riklaunim@gmail.com">riklaunim@gmail.com</a><br><b>License</b>: GPL')
+		message.setWindowTitle('PyDingo 0.4')
+		message.setIcon(QtGui.QMessageBox.Information)
+		message.addButton('Ok', QtGui.QMessageBox.AcceptRole)
+		#message.setDetailedText('Unsaved changes in: ' + self.ui.url.text())
+		message.exec_()
 	
+	def action_close(self):
+		"""
+		Close the application
+		"""
+		self.close()
+		
 	def close_tab(self):
 		"""
 		Remove the current tab
@@ -72,7 +98,7 @@ class Dingo(QtGui.QMainWindow):
 	
 	def new_tab(self):
 		"""
-		Create a new Tab
+		Create a new Tab / file manager
 		"""
 		from handlers.directory import handler
 		self.tab = handler.directoryWidget(mainWindow=self, newTab=True)
@@ -81,7 +107,31 @@ class Dingo(QtGui.QMainWindow):
 		self.tab.ui.back.setEnabled(False)
 		self.tab.ui.next.setEnabled(False)
 		self.set_shortcuts()
-		
+	
+	def new_browser(self):
+		"""
+		Create a new Tab - web browser
+		"""
+		from handlers.http import handler
+		self.tab = handler.httpWidget(mainWindow=self, newTab=True, url='http://www.google.pl')
+		self.history[self.main.currentIndex()] = [unicode(self.tab.ui.url.text())]
+		self.future[self.main.currentIndex()] = []
+		self.tab.ui.back.setEnabled(False)
+		self.tab.ui.next.setEnabled(False)
+		self.set_shortcuts()
+	
+	def new_textEditor(self):
+		"""
+		Create a new Tab - text editor
+		"""
+		from handlers.file import handler
+		self.tab = handler.fileWidget(mainWindow=self, newTab=True)
+		self.history[self.main.currentIndex()] = [unicode(self.tab.ui.url.text())]
+		self.future[self.main.currentIndex()] = []
+		self.tab.ui.back.setEnabled(False)
+		self.tab.ui.next.setEnabled(False)
+		self.set_shortcuts()
+	
 	
 	def up_clicked(self):
 		"""

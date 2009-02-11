@@ -65,8 +65,62 @@
      <height>23</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuDingo" >
+    <property name="title" >
+     <string>Dingo</string>
+    </property>
+    <addaction name="actionClose" />
+   </widget>
+   <widget class="QMenu" name="menuOpen" >
+    <property name="title" >
+     <string>Open</string>
+    </property>
+    <addaction name="actionFile_Manager" />
+    <addaction name="actionWeb_Browser" />
+    <addaction name="actionText_Editor" />
+   </widget>
+   <widget class="QMenu" name="menuSettings" >
+    <property name="title" >
+     <string>Settings</string>
+    </property>
+    <addaction name="actionConfigure" />
+    <addaction name="actionAbout" />
+   </widget>
+   <addaction name="menuDingo" />
+   <addaction name="menuOpen" />
+   <addaction name="menuSettings" />
   </widget>
   <widget class="QStatusBar" name="statusbar" />
+  <action name="actionConfigure" >
+   <property name="text" >
+    <string>Configure</string>
+   </property>
+  </action>
+  <action name="actionAbout" >
+   <property name="text" >
+    <string>About</string>
+   </property>
+  </action>
+  <action name="actionFile_Manager" >
+   <property name="text" >
+    <string>File Manager</string>
+   </property>
+  </action>
+  <action name="actionWeb_Browser" >
+   <property name="text" >
+    <string>Web Browser</string>
+   </property>
+  </action>
+  <action name="actionText_Editor" >
+   <property name="text" >
+    <string>Text Editor</string>
+   </property>
+  </action>
+  <action name="actionClose" >
+   <property name="text" >
+    <string>Close</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="resources.qrc" />

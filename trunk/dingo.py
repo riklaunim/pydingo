@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'dingo.ui'
 #
-# Created: Sat Jan 10 19:35:48 2009
+# Created: Wed Feb 11 12:16:17 2009
 #      by: PyQt4 UI code generator 4.4.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -45,15 +45,51 @@ class Ui_Dingo(object):
         self.menubar = QtGui.QMenuBar(Dingo)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 573, 23))
         self.menubar.setObjectName("menubar")
+        self.menuDingo = QtGui.QMenu(self.menubar)
+        self.menuDingo.setObjectName("menuDingo")
+        self.menuOpen = QtGui.QMenu(self.menubar)
+        self.menuOpen.setObjectName("menuOpen")
+        self.menuSettings = QtGui.QMenu(self.menubar)
+        self.menuSettings.setObjectName("menuSettings")
         Dingo.setMenuBar(self.menubar)
         self.statusbar = QtGui.QStatusBar(Dingo)
         self.statusbar.setObjectName("statusbar")
         Dingo.setStatusBar(self.statusbar)
+        self.actionConfigure = QtGui.QAction(Dingo)
+        self.actionConfigure.setObjectName("actionConfigure")
+        self.actionAbout = QtGui.QAction(Dingo)
+        self.actionAbout.setObjectName("actionAbout")
+        self.actionFile_Manager = QtGui.QAction(Dingo)
+        self.actionFile_Manager.setObjectName("actionFile_Manager")
+        self.actionWeb_Browser = QtGui.QAction(Dingo)
+        self.actionWeb_Browser.setObjectName("actionWeb_Browser")
+        self.actionText_Editor = QtGui.QAction(Dingo)
+        self.actionText_Editor.setObjectName("actionText_Editor")
+        self.actionClose = QtGui.QAction(Dingo)
+        self.actionClose.setObjectName("actionClose")
+        self.menuDingo.addAction(self.actionClose)
+        self.menuOpen.addAction(self.actionFile_Manager)
+        self.menuOpen.addAction(self.actionWeb_Browser)
+        self.menuOpen.addAction(self.actionText_Editor)
+        self.menuSettings.addAction(self.actionConfigure)
+        self.menuSettings.addAction(self.actionAbout)
+        self.menubar.addAction(self.menuDingo.menuAction())
+        self.menubar.addAction(self.menuOpen.menuAction())
+        self.menubar.addAction(self.menuSettings.menuAction())
 
         self.retranslateUi(Dingo)
         QtCore.QMetaObject.connectSlotsByName(Dingo)
 
     def retranslateUi(self, Dingo):
         Dingo.setWindowTitle(QtGui.QApplication.translate("Dingo", "Dingo", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuDingo.setTitle(QtGui.QApplication.translate("Dingo", "Dingo", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuOpen.setTitle(QtGui.QApplication.translate("Dingo", "Open", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuSettings.setTitle(QtGui.QApplication.translate("Dingo", "Settings", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionConfigure.setText(QtGui.QApplication.translate("Dingo", "Configure", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionAbout.setText(QtGui.QApplication.translate("Dingo", "About", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionFile_Manager.setText(QtGui.QApplication.translate("Dingo", "File Manager", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionWeb_Browser.setText(QtGui.QApplication.translate("Dingo", "Web Browser", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionText_Editor.setText(QtGui.QApplication.translate("Dingo", "Text Editor", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionClose.setText(QtGui.QApplication.translate("Dingo", "Close", None, QtGui.QApplication.UnicodeUTF8))
 
 import resources_rc
