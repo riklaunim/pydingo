@@ -234,23 +234,21 @@ class Dingo(QtGui.QMainWindow):
 			else:
 				#from handlers.metafile import handler
 				#self.tab = handler.metafileWidget(self.main, url=url, mainWindow=self, newTab=newTab)
+				print url
 				q = QtGui.QDesktopServices()
-				q.openUrl(QtCore.QUrl(url))
+				q.openUrl(QtCore.QUrl.fromLocalFile(url))
 		elif unicode(url).startswith('http://') or unicode(url).startswith('www'):
 			if unicode(url).startswith('www'):
 				url = 'http://%s' % unicode(url)
 			from handlers.http import handler
 			self.tab = handler.httpWidget(url=url, mainWindow=self, newTab=newTab)
 		else:
-			"""
-			ToDo:
-				- clean the core here, make elif for web urls
-				- make a generic url to handler executer here
-				- make a default - no plugin found for this url widget/page
-			"""
 			routing = unicode(url)
-			print routing
 			if isfile(routing):
+				# clear back history
+				self.history[index] = []
+				self.tab.ui.back.setEnabled(False)
+				# open file in system prefered app
 				q = QtGui.QDesktopServices()
 				q.openUrl(QtCore.QUrl.fromLocalFile(routing))
 		
