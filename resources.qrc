@@ -1,5 +1,22 @@
 <RCC>
   <qresource prefix="ui" >
+    <file>media/file/back.png</file>
+    <file>media/file/close.png</file>
+    <file>media/file/detach.png</file>
+    <file>media/file/edit.png</file>
+    <file>media/file/home.png</file>
+    <file>media/file/metainfo.png</file>
+    <file>media/file/new_tab.png</file>
+    <file>media/file/next.png</file>
+    <file>media/file/open.png</file>
+    <file>media/file/redo.png</file>
+    <file>media/file/reload.png</file>
+    <file>media/file/save.png</file>
+    <file>media/file/saveas.png</file>
+    <file>media/file/search.png</file>
+    <file>media/file/stop.png</file>
+    <file>media/file/undo.png</file>
+    <file>media/file/up.png</file>
     <file>pydingo.png</file>
   </qresource>
 </RCC>
