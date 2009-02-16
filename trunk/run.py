@@ -234,7 +234,11 @@ class Dingo(QtGui.QMainWindow):
 			else:
 				#from handlers.metafile import handler
 				#self.tab = handler.metafileWidget(self.main, url=url, mainWindow=self, newTab=newTab)
-				print url
+				
+				# clear back history
+				self.history[index] = []
+				self.tab.ui.back.setEnabled(False)
+				# open file in system prefered app
 				q = QtGui.QDesktopServices()
 				q.openUrl(QtCore.QUrl.fromLocalFile(url))
 		elif unicode(url).startswith('http://') or unicode(url).startswith('www'):

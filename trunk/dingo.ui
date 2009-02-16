@@ -1,7 +1,8 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>Dingo</class>
- <widget class="QMainWindow" name="Dingo" >
-  <property name="geometry" >
+ <widget class="QMainWindow" name="Dingo">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,46 +10,46 @@
     <height>549</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Dingo</string>
   </property>
-  <property name="windowIcon" >
-   <iconset resource="resources.qrc" >
+  <property name="windowIcon">
+   <iconset resource="resources.qrc">
     <normaloff>:/ui/pydingo.png</normaloff>:/ui/pydingo.png</iconset>
   </property>
-  <widget class="QWidget" name="centralwidget" >
-   <layout class="QVBoxLayout" name="verticalLayout" >
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QSplitter" name="splitter" >
-      <property name="orientation" >
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
-      <widget class="QFrame" name="mainFrame" >
-       <property name="sizePolicy" >
-        <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+      <widget class="QFrame" name="mainFrame">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="frameShape" >
+       <property name="frameShape">
         <enum>QFrame::NoFrame</enum>
        </property>
-       <property name="frameShadow" >
+       <property name="frameShadow">
         <enum>QFrame::Plain</enum>
        </property>
-       <property name="lineWidth" >
+       <property name="lineWidth">
         <number>1</number>
        </property>
-       <property name="midLineWidth" >
+       <property name="midLineWidth">
         <number>0</number>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_2" />
+       <layout class="QVBoxLayout" name="verticalLayout_2"/>
       </widget>
-      <widget class="QFrame" name="dockFrame" >
-       <property name="frameShape" >
+      <widget class="QFrame" name="dockFrame">
+       <property name="frameShape">
         <enum>QFrame::NoFrame</enum>
        </property>
-       <property name="frameShadow" >
+       <property name="frameShadow">
         <enum>QFrame::Raised</enum>
        </property>
       </widget>
@@ -56,74 +57,74 @@
     </item>
    </layout>
   </widget>
-  <widget class="QMenuBar" name="menubar" >
-   <property name="geometry" >
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
      <width>573</width>
-     <height>23</height>
+     <height>22</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuDingo" >
-    <property name="title" >
+   <widget class="QMenu" name="menuDingo">
+    <property name="title">
      <string>Dingo</string>
     </property>
-    <addaction name="actionClose" />
+    <addaction name="actionClose"/>
    </widget>
-   <widget class="QMenu" name="menuOpen" >
-    <property name="title" >
+   <widget class="QMenu" name="menuOpen">
+    <property name="title">
      <string>Open</string>
     </property>
-    <addaction name="actionFile_Manager" />
-    <addaction name="actionWeb_Browser" />
-    <addaction name="actionText_Editor" />
+    <addaction name="actionFile_Manager"/>
+    <addaction name="actionWeb_Browser"/>
+    <addaction name="actionText_Editor"/>
    </widget>
-   <widget class="QMenu" name="menuSettings" >
-    <property name="title" >
+   <widget class="QMenu" name="menuSettings">
+    <property name="title">
      <string>Settings</string>
     </property>
-    <addaction name="actionConfigure" />
-    <addaction name="actionAbout" />
+    <addaction name="actionConfigure"/>
+    <addaction name="actionAbout"/>
    </widget>
-   <addaction name="menuDingo" />
-   <addaction name="menuOpen" />
-   <addaction name="menuSettings" />
+   <addaction name="menuDingo"/>
+   <addaction name="menuOpen"/>
+   <addaction name="menuSettings"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar" />
-  <action name="actionConfigure" >
-   <property name="text" >
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionConfigure">
+   <property name="text">
     <string>Configure</string>
    </property>
   </action>
-  <action name="actionAbout" >
-   <property name="text" >
+  <action name="actionAbout">
+   <property name="text">
     <string>About</string>
    </property>
   </action>
-  <action name="actionFile_Manager" >
-   <property name="text" >
+  <action name="actionFile_Manager">
+   <property name="text">
     <string>File Manager</string>
    </property>
   </action>
-  <action name="actionWeb_Browser" >
-   <property name="text" >
+  <action name="actionWeb_Browser">
+   <property name="text">
     <string>Web Browser</string>
    </property>
   </action>
-  <action name="actionText_Editor" >
-   <property name="text" >
+  <action name="actionText_Editor">
+   <property name="text">
     <string>Text Editor</string>
    </property>
   </action>
-  <action name="actionClose" >
-   <property name="text" >
+  <action name="actionClose">
+   <property name="text">
     <string>Close</string>
    </property>
   </action>
  </widget>
  <resources>
-  <include location="resources.qrc" />
+  <include location="resources.qrc"/>
  </resources>
  <connections/>
 </ui>

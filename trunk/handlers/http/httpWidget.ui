@@ -1,7 +1,8 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>HttpWidget</class>
- <widget class="QWidget" name="HttpWidget" >
-  <property name="geometry" >
+ <widget class="QWidget" name="HttpWidget">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,194 +10,194 @@
     <height>426</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" >
+  <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout" >
+    <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QPushButton" name="newTab" >
-       <property name="toolTip" >
+      <widget class="QPushButton" name="newTab">
+       <property name="toolTip">
         <string>New Tab</string>
        </property>
-       <property name="text" >
+       <property name="text">
         <string/>
        </property>
-       <property name="icon" >
-        <iconset>
-         <normaloff>../../media/file/new_tab.png</normaloff>../../media/file/new_tab.png</iconset>
+       <property name="icon">
+        <iconset resource="../../resources.qrc">
+         <normaloff>:/ui/media/file/new_tab.png</normaloff>:/ui/media/file/new_tab.png</iconset>
        </property>
-       <property name="iconSize" >
+       <property name="iconSize">
         <size>
-         <width>32</width>
-         <height>32</height>
+         <width>24</width>
+         <height>24</height>
         </size>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="back" >
-       <property name="toolTip" >
+      <widget class="QPushButton" name="back">
+       <property name="toolTip">
         <string>Back</string>
        </property>
-       <property name="text" >
+       <property name="text">
         <string/>
        </property>
-       <property name="icon" >
-        <iconset>
-         <normaloff>../../media/file/back.png</normaloff>../../media/file/back.png</iconset>
+       <property name="icon">
+        <iconset resource="../../resources.qrc">
+         <normaloff>:/ui/media/file/back.png</normaloff>:/ui/media/file/back.png</iconset>
        </property>
-       <property name="iconSize" >
+       <property name="iconSize">
         <size>
-         <width>32</width>
-         <height>32</height>
+         <width>24</width>
+         <height>24</height>
         </size>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="next" >
-       <property name="enabled" >
+      <widget class="QPushButton" name="next">
+       <property name="enabled">
         <bool>false</bool>
        </property>
-       <property name="toolTip" >
+       <property name="toolTip">
         <string>Next</string>
        </property>
-       <property name="text" >
+       <property name="text">
         <string/>
        </property>
-       <property name="icon" >
-        <iconset>
-         <normaloff>../../media/file/next.png</normaloff>../../media/file/next.png</iconset>
+       <property name="icon">
+        <iconset resource="../../resources.qrc">
+         <normaloff>:/ui/media/file/next.png</normaloff>:/ui/media/file/next.png</iconset>
        </property>
-       <property name="iconSize" >
+       <property name="iconSize">
         <size>
-         <width>32</width>
-         <height>32</height>
+         <width>24</width>
+         <height>24</height>
         </size>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="stop" >
-       <property name="toolTip" >
+      <widget class="QPushButton" name="stop">
+       <property name="toolTip">
         <string>Stop</string>
        </property>
-       <property name="text" >
+       <property name="text">
         <string/>
        </property>
-       <property name="icon" >
-        <iconset>
-         <normaloff>../../media/file/stop.png</normaloff>../../media/file/stop.png</iconset>
+       <property name="icon">
+        <iconset resource="../../resources.qrc">
+         <normaloff>:/ui/media/file/stop.png</normaloff>:/ui/media/file/stop.png</iconset>
        </property>
-       <property name="iconSize" >
+       <property name="iconSize">
         <size>
-         <width>32</width>
-         <height>32</height>
+         <width>24</width>
+         <height>24</height>
         </size>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="reload" >
-       <property name="toolTip" >
+      <widget class="QPushButton" name="reload">
+       <property name="toolTip">
         <string>Reload</string>
        </property>
-       <property name="text" >
+       <property name="text">
         <string/>
        </property>
-       <property name="icon" >
-        <iconset>
-         <normaloff>../../media/file/reload.png</normaloff>../../media/file/reload.png</iconset>
+       <property name="icon">
+        <iconset resource="../../resources.qrc">
+         <normaloff>:/ui/media/file/reload.png</normaloff>:/ui/media/file/reload.png</iconset>
        </property>
-       <property name="iconSize" >
+       <property name="iconSize">
         <size>
-         <width>32</width>
-         <height>32</height>
+         <width>24</width>
+         <height>24</height>
         </size>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="up" >
-       <property name="toolTip" >
+      <widget class="QPushButton" name="up">
+       <property name="toolTip">
         <string>Up</string>
        </property>
-       <property name="text" >
+       <property name="text">
         <string/>
        </property>
-       <property name="icon" >
-        <iconset>
-         <normaloff>../../media/file/up.png</normaloff>../../media/file/up.png</iconset>
+       <property name="icon">
+        <iconset resource="../../resources.qrc">
+         <normaloff>:/ui/media/file/up.png</normaloff>:/ui/media/file/up.png</iconset>
        </property>
-       <property name="iconSize" >
+       <property name="iconSize">
         <size>
-         <width>32</width>
-         <height>32</height>
+         <width>24</width>
+         <height>24</height>
         </size>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="home" >
-       <property name="toolTip" >
+      <widget class="QPushButton" name="home">
+       <property name="toolTip">
         <string>Home</string>
        </property>
-       <property name="text" >
+       <property name="text">
         <string/>
        </property>
-       <property name="icon" >
-        <iconset>
-         <normaloff>../../media/file/home.png</normaloff>../../media/file/home.png</iconset>
+       <property name="icon">
+        <iconset resource="../../resources.qrc">
+         <normaloff>:/ui/media/file/home.png</normaloff>:/ui/media/file/home.png</iconset>
        </property>
-       <property name="iconSize" >
+       <property name="iconSize">
         <size>
-         <width>32</width>
-         <height>32</height>
+         <width>24</width>
+         <height>24</height>
         </size>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="url" />
+      <widget class="QLineEdit" name="url"/>
      </item>
      <item>
-      <widget class="QPushButton" name="detach" >
-       <property name="toolTip" >
+      <widget class="QPushButton" name="detach">
+       <property name="toolTip">
         <string>Detach</string>
        </property>
-       <property name="text" >
+       <property name="text">
         <string/>
        </property>
-       <property name="icon" >
-        <iconset>
-         <normaloff>../../media/file/detach.png</normaloff>../../media/file/detach.png</iconset>
+       <property name="icon">
+        <iconset resource="../../resources.qrc">
+         <normaloff>:/ui/media/file/detach.png</normaloff>:/ui/media/file/detach.png</iconset>
        </property>
-       <property name="iconSize" >
+       <property name="iconSize">
         <size>
-         <width>32</width>
-         <height>32</height>
+         <width>24</width>
+         <height>24</height>
         </size>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="close" >
-       <property name="toolTip" >
+      <widget class="QPushButton" name="close">
+       <property name="toolTip">
         <string>Close</string>
        </property>
-       <property name="text" >
+       <property name="text">
         <string/>
        </property>
-       <property name="icon" >
-        <iconset>
-         <normaloff>../../media/file/close.png</normaloff>../../media/file/close.png</iconset>
+       <property name="icon">
+        <iconset resource="../../resources.qrc">
+         <normaloff>:/ui/media/file/close.png</normaloff>:/ui/media/file/close.png</iconset>
        </property>
-       <property name="iconSize" >
+       <property name="iconSize">
         <size>
-         <width>32</width>
-         <height>32</height>
+         <width>24</width>
+         <height>24</height>
         </size>
        </property>
       </widget>
@@ -204,8 +205,8 @@
     </layout>
    </item>
    <item>
-    <widget class="QWebView" name="webView" >
-     <property name="url" >
+    <widget class="QWebView" name="webView">
+     <property name="url">
       <url>
        <string>about:blank</string>
       </url>
@@ -213,8 +214,6 @@
     </widget>
    </item>
   </layout>
-  <zorder>webView</zorder>
-  <zorder>url</zorder>
  </widget>
  <customwidgets>
   <customwidget>
@@ -223,6 +222,8 @@
    <header>QtWebKit/QWebView</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../../resources.qrc"/>
+ </resources>
  <connections/>
 </ui>
