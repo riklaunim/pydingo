@@ -17,7 +17,7 @@ class FileManagerColumnView(QtGui.QColumnView):
 		super(FileManagerColumnView, self).__init__(parent)
 		self.parent = parent
 		
-		self.setIconSize(QtCore.QSize(48, 48))
+		self.setIconSize(QtCore.QSize(32, 32))
 		self.setDragEnabled(True)
 		self.setAcceptDrops(True)
 		self.setDropIndicatorShown(True)
@@ -141,7 +141,7 @@ class FileManagerTableView(QtGui.QTableView):
 		self.parent = parent
 		
 		self.setWordWrap(True)
-		self.setIconSize(QtCore.QSize(48, 48))
+		self.setIconSize(QtCore.QSize(32, 32))
 		self.setDragEnabled(True)
 		self.setAcceptDrops(True)
 		self.setDropIndicatorShown(True)
@@ -268,7 +268,7 @@ class FileManagerTreeView(QtGui.QTreeView):
 		self.parent = parent
 		
 		self.setWordWrap(True)
-		self.setIconSize(QtCore.QSize(48, 48))
+		self.setIconSize(QtCore.QSize(32, 32))
 		self.setDragEnabled(True)
 		self.setAcceptDrops(True)
 		self.setDropIndicatorShown(True)
@@ -397,7 +397,7 @@ class FileManagerListView(QtGui.QListView):
 		self.setResizeMode(QtGui.QListView.Adjust)
 		self.setWordWrap(True)
 		self.setWrapping(True)
-		self.setIconSize(QtCore.QSize(48, 48))
+		self.setIconSize(QtCore.QSize(32, 32))
 		self.setDragEnabled(True)
 		self.setAcceptDrops(True)
 		self.setDropIndicatorShown(True)
